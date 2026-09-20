@@ -1,9 +1,32 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { products } from '../data/products';
+import { products as localProducts } from '../data/products';
 import ProductCard from '../components/ProductCard';
+import { useState, useEffect } from 'react';
+import { db } from '../config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const Home = () => {
+  const [products, setProducts] = useState(localProducts);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'products'));
+        const fbProducts = [];
+        querySnapshot.forEach((doc) => {
+          fbProducts.push({ id: doc.id, ...doc.data() });
+        });
+        if (fbProducts.length > 0) {
+          setProducts(fbProducts);
+        }
+      } catch (error) {
+        console.error("Error fetching products from Firestore:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   // Demo filtering for sections
   const bestSellers = products.filter(p => p.rating >= 4.8).slice(0, 4);
   const newArrivals = products.filter(p => p.category === 'Home Product').slice(0, 4);

@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { products } from '../data/products';
+import { products as localProducts } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import { Filter } from 'lucide-react';
+import { db } from '../config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const Shop = () => {
   const { category } = useParams();
@@ -11,8 +13,30 @@ const Shop = () => {
   const [sortBy, setSortBy] = useState('featured');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [priceRange, setPriceRange] = useState(100);
+  const [products, setProducts] = useState(localProducts);
+  const [loading, setLoading] = useState(true);
 
   const initialSearchQuery = searchParams.get('q') || '';
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'products'));
+        const fbProducts = [];
+        querySnapshot.forEach((doc) => {
+          fbProducts.push({ id: doc.id, ...doc.data() });
+        });
+        if (fbProducts.length > 0) {
+          setProducts(fbProducts);
+        }
+      } catch (error) {
+        console.error("Error fetching products from Firestore:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
   
   const filteredProducts = useMemo(() => {
     let filtered = products;

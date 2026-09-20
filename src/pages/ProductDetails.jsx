@@ -1,18 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { products } from '../data/products';
+import { products as localProducts } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { storeConfig } from '../config/store.config';
 import { Check, Shield, Truck, RotateCcw } from 'lucide-react';
+import { db } from '../config/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   
-  const product = products.find(p => p.id === id);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selections, setSelections] = useState({});
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const docRef = doc(db, 'products', id);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          setProduct({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          // Fallback to local
+          const localMatch = localProducts.find(p => p.id === id);
+          if (localMatch) setProduct(localMatch);
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        const localMatch = localProducts.find(p => p.id === id);
+        if (localMatch) setProduct(localMatch);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return <div className="container py-xxl text-center">Loading...</div>;
+  }
 
   if (!product) {
     return <div className="container py-xxl text-center">Product not found.</div>;

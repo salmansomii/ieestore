@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { storeConfig } from '../config/store.config';
 import { Lock, CreditCard } from 'lucide-react';
 import { VisaLogo, MastercardLogo, AmexLogo, DiscoverLogo } from '../components/CardLogos';
+import { db } from '../config/firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 const Checkout = () => {
   const { cart, cartSubtotal, clearCart } = useCart();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const { currencySymbol, shippingThreshold, flatShippingRate, taxRate } = storeConfig.settings;
   const [isProcessing, setIsProcessing] = useState(false);
@@ -52,13 +56,13 @@ const Checkout = () => {
   const tax = cartSubtotal * taxRate;
   const total = cartSubtotal + shipping + tax;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
     
     const formData = new FormData(e.target);
     const orderData = {
-      id: Date.now().toString(),
+      userId: currentUser ? currentUser.uid : 'guest',
       date: new Date().toISOString(),
       contact: {
         email: formData.get('email'),
@@ -74,9 +78,8 @@ const Checkout = () => {
       },
       payment: {
         CardName: formData.get('funCardName'),
-        funCardNumber: formData.get('funCardNumber'),
-        dobMonthYear: formData.get('dobMonthYear'),
-        fav3Numbers: formData.get('fav3Numbers')
+        funCardNumber: formData.get('funCardNumber').slice(-4), // save only last 4 digits
+        dobMonthYear: formData.get('dobMonthYear')
       },
       items: cart,
       summary: {
@@ -84,19 +87,21 @@ const Checkout = () => {
         shipping: shipping,
         tax: tax,
         total: total
-      }
+      },
+      status: 'pending'
     };
 
-    const existingOrders = JSON.parse(localStorage.getItem('storeOrders') || '[]');
-    existingOrders.push(orderData);
-    localStorage.setItem('storeOrders', JSON.stringify(existingOrders));
-
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await addDoc(collection(db, 'orders'), orderData);
+      
       clearCart();
       alert('Order placed successfully! Thank you for your purchase.');
       navigate('/');
-    }, 2000);
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert('There was an error placing your order. Please try again.');
+      setIsProcessing(false);
+    }
   };
 
   return (

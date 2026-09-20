@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, User, Menu, X, Search } from 'lucide-react';
+import { ShoppingBag, User, Menu, X, Search, Shield } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { storeConfig } from '../config/store.config';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { cartCount } = useCart();
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -88,9 +90,13 @@ const Header = () => {
             </button>
           </form>
 
-          <Link to="/account" style={{ color: 'var(--text-primary)' }} className="hidden md:block">
-            <User size={24} />
-          </Link>
+
+
+          {isAdmin && (
+            <Link to="/admin" style={{ color: 'var(--text-primary)' }} className="hidden md:block" title="Admin Dashboard">
+              <Shield size={24} />
+            </Link>
+          )}
           
           <Link to="/cart" style={{ position: 'relative', color: 'var(--text-primary)', padding: '4px' }}>
             <ShoppingBag size={24} />

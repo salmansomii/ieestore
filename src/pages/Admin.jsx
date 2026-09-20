@@ -1,16 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { storeConfig } from '../config/store.config';
+import { useAuth } from '../context/AuthContext';
+import { db } from '../config/firebase';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 
 const Admin = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { currencySymbol } = storeConfig.settings;
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
-    const savedOrders = JSON.parse(localStorage.getItem('storeOrders') || '[]');
-    // Sort orders by date descending
-    savedOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
-    setOrders(savedOrders);
-  }, []);
+    const fetchOrders = async () => {
+      if (!isAdmin) return;
+      try {
+        const q = query(collection(db, 'orders'), orderBy('date', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const fbOrders = [];
+        querySnapshot.forEach((doc) => {
+          fbOrders.push({ id: doc.id, ...doc.data() });
+        });
+        setOrders(fbOrders);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, [isAdmin]);
+
+  if (!isAdmin) {
+    return <div className="container py-xl text-center text-danger-color font-bold">Access Denied. Admin privileges required.</div>;
+  }
 
   return (
     <div className="container py-xl">
