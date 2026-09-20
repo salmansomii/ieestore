@@ -210,6 +210,8 @@ h1, h2, h3, h4, h5, h6 {
 @media (min-width: 768px) {
   .md\:block { display: block; }
   .md\:hidden { display: none; }
+  .md\:flex-row { flex-direction: row; }
+  .md\:flex-col { flex-direction: column; }
 }
 @media (max-width: 768px) {
   .col-span-2 { grid-column: span 1 / span 1; }

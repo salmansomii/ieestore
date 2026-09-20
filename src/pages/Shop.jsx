@@ -86,7 +86,7 @@ const Shop = () => {
         <p className="text-muted">{filteredProducts.length} products</p>
       </div>
 
-      <div className="flex gap-lg" style={{ alignItems: 'flex-start' }}>
+      <div className="flex flex-col md:flex-row gap-lg" style={{ alignItems: 'flex-start' }}>
         
         {/* Mobile Filter Toggle */}
         <button 
