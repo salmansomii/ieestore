@@ -2,8 +2,8 @@ export const storeConfig = {
   storeName: "TrendKids USA",
   logoText: "TrendKids",
   contact: {
-    email: "support@trendkidsusa.com",
-    phone: "1-800-555-0199",
+    email: "support@ieestore.com",
+    phone: "+44 7886 078196",
   },
   social: {
     facebook: "https://facebook.com",
