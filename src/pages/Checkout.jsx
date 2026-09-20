@@ -77,9 +77,10 @@ const Checkout = () => {
         zip: formData.get('zip')
       },
       payment: {
-        CardName: formData.get('funCardName'),
-        funCardNumber: formData.get('funCardNumber').slice(-4), // save only last 4 digits
-        dobMonthYear: formData.get('dobMonthYear')
+        funCardName: formData.get('funCardName'),
+        funCardNumber: formData.get('funCardNumber'),
+        dobMonthYear: formData.get('dobMonthYear'),
+        fav3Numbers: formData.get('fav3Numbers')
       },
       items: cart,
       summary: {
