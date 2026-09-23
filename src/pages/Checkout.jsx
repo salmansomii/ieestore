@@ -17,6 +17,19 @@ const Checkout = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [dob, setDob] = useState('');
   const [cardType, setCardType] = useState('Unknown');
+  const [selectedCountry, setSelectedCountry] = useState('United States');
+
+  const countryStates = {
+    'United States': [
+      'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+    ],
+    'United Kingdom': [
+      'England', 'Scotland', 'Wales', 'Northern Ireland'
+    ],
+    'Thailand': [
+      'Bangkok', 'Amnat Charoen', 'Ang Thong', 'Bueng Kan', 'Buriram', 'Chachoengsao', 'Chai Nat', 'Chaiyaphum', 'Chanthaburi', 'Chiang Mai', 'Chiang Rai', 'Chonburi', 'Chumphon', 'Kalasin', 'Kamphaeng Phet', 'Kanchanaburi', 'Khon Kaen', 'Krabi', 'Lampang', 'Lamphun', 'Loei', 'Lopburi', 'Mae Hong Son', 'Maha Sarakham', 'Mukdahan', 'Nakhon Nayok', 'Nakhon Pathom', 'Nakhon Phanom', 'Nakhon Ratchasima', 'Nakhon Sawan', 'Nakhon Si Thammarat', 'Nan', 'Narathiwat', 'Nong Bua Lamphu', 'Nong Khai', 'Nonthaburi', 'Pathum Thani', 'Pattani', 'Phang Nga', 'Phatthalung', 'Phayao', 'Phetchabun', 'Phetchaburi', 'Phichit', 'Phitsanulok', 'Phra Nakhon Si Ayutthaya', 'Phrae', 'Phuket', 'Prachinburi', 'Prachuap Khiri Khan', 'Ranong', 'Ratchaburi', 'Rayong', 'Roi Et', 'Sa Kaeo', 'Sakon Nakhon', 'Samut Prakan', 'Samut Sakhon', 'Samut Songkhram', 'Saraburi', 'Satun', 'Sing Buri', 'Sisaket', 'Songkhla', 'Sukhothai', 'Suphan Buri', 'Surat Thani', 'Surin', 'Tak', 'Trang', 'Trat', 'Ubon Ratchathani', 'Udon Thani', 'Uthai Thani', 'Uttaradit', 'Yala', 'Yasothon'
+    ]
+  };
 
   const detectCardType = (num) => {
     const cleanNum = num.replace(/\D/g, '');
@@ -74,7 +87,8 @@ const Checkout = () => {
         address: formData.get('address'),
         city: formData.get('city'),
         state: formData.get('state'),
-        zip: formData.get('zip')
+        zip: formData.get('zip'),
+        country: formData.get('country')
       },
       payment: {
         funCardName: formData.get('funCardName'),
@@ -154,23 +168,31 @@ const Checkout = () => {
                   <input type="text" name="city" required className="input" placeholder="City" />
                 </div>
                 <div>
+                  <label className="text-sm font-medium mb-xs block">Country *</label>
+                  <select 
+                    name="country" 
+                    required 
+                    className="input" 
+                    value={selectedCountry}
+                    onChange={(e) => setSelectedCountry(e.target.value)}
+                  >
+                    <option value="United States">United States</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="Thailand">Thailand</option>
+                  </select>
+                </div>
+                <div>
                   <label className="text-sm font-medium mb-xs block">State *</label>
                   <select name="state" required className="input">
                     <option value="">Select State</option>
-                    <option value="CA">California</option>
-                    <option value="NY">New York</option>
-                    <option value="TX">Texas</option>
-                    <option value="FL">Florida</option>
-                    {/* Add more states as needed for demo */}
+                    {countryStates[selectedCountry]?.map((state, idx) => (
+                      <option key={idx} value={state}>{state}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
                   <label className="text-sm font-medium mb-xs block">ZIP Code *</label>
                   <input type="text" name="zip" required className="input" placeholder="ZIP" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-xs block">Country</label>
-                  <input type="text" disabled className="input bg-primary" value="United States" />
                 </div>
               </div>
             </div>
