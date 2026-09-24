@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "coffee-spark-ai-barista-96112"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

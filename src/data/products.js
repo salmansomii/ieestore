@@ -270,5 +270,53 @@ export const products = [
     variations: [],
     features: ["16pcs set", "Gingerbread Man design", "Festive"],
     image: "/product_images/product_8.jpg"
+  },
+  {
+    id: "n19",
+    name: "Coach Teri Brown Shoulder Bag CA548 Signature Canvas Outlet New with Box",
+    category: "Fashion",
+    subcategory: "Shoulder Bags",
+    description: "Coach Teri Brown Shoulder Bag CA548 Signature Canvas Outlet New with Box",
+    price: 50.00,
+    compareAtPrice: 150.00,
+    discountPercentage: 67,
+    rating: 5.0,
+    sku: "BAG-COA-BRN",
+    stock: 20,
+    variations: [],
+    features: ["Signature Canvas", "New with Box"],
+    image: "/product_images/Coach Teri Brown Shoulder Bag CA548 Signature Canvas Outlet New with Box.webp"
+  },
+  {
+    id: "n20",
+    name: "Coach Teri Shoulder Signature Canvas CAL51 Powder Pink outlet NEW",
+    category: "Fashion",
+    subcategory: "Shoulder Bags",
+    description: "Coach Teri Shoulder Signature Canvas CAL51 Powder Pink outlet NEW",
+    price: 60.00,
+    compareAtPrice: 180.00,
+    discountPercentage: 67,
+    rating: 5.0,
+    sku: "BAG-COA-PNK",
+    stock: 20,
+    variations: [],
+    features: ["Signature Canvas", "Powder Pink"],
+    image: "/product_images/Coach Teri Shoulder Signature Canvas CAL51 Powder Pink outlet NEW.webp"
+  },
+  {
+    id: "n21",
+    name: "NEW COACH Teri 2Way Shoulder Bag Signature Coated Canvas White outlet CA548",
+    category: "Fashion",
+    subcategory: "Shoulder Bags",
+    description: "NEW COACH Teri 2Way Shoulder Bag Signature Coated Canvas White outlet CA548",
+    price: 64.00,
+    compareAtPrice: 190.00,
+    discountPercentage: 66,
+    rating: 5.0,
+    sku: "BAG-COA-WHT",
+    stock: 20,
+    variations: [],
+    features: ["Signature Coated Canvas", "White"],
+    image: "/product_images/NEW COACH Teri 2Way Shoulder Bag Signature Coated Canvas White outlet CA548.webp"
   }
 ];

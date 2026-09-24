@@ -39,7 +39,7 @@ const Home = () => {
         height: '600px', 
         display: 'flex', 
         alignItems: 'center',
-        backgroundImage: 'url("/hero_banner.png")',
+        backgroundImage: 'url("/hero_banner.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
@@ -63,7 +63,7 @@ const Home = () => {
       <section className="section bg-secondary">
         <div className="container">
           <h2 className="text-2xl text-center mb-xl">Shop by Category</h2>
-          <div className="grid grid-cols-3 gap-md">
+          <div className="grid grid-cols-4 gap-md">
             <Link to="/shop/Baby" className="category-card" style={{ position: 'relative', height: '300px', borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
               <img src="/product_images/product_2.jpg" alt="Baby" className="w-full h-full object-contain" />
               <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -80,6 +80,12 @@ const Home = () => {
               <img src="/product_images/product_7.jpg" alt="Home Product" className="w-full h-full object-contain" />
               <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <h3 style={{ color: 'white', fontSize: '2rem', fontWeight: 700 }}>Home Product</h3>
+              </div>
+            </Link>
+            <Link to="/shop/Fashion" className="category-card" style={{ position: 'relative', height: '300px', borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
+              <img src="/product_images/Coach Teri Brown Shoulder Bag CA548 Signature Canvas Outlet New with Box.webp" alt="Fashion" className="w-full h-full object-contain" />
+              <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <h3 style={{ color: 'white', fontSize: '2rem', fontWeight: 700 }}>Fashion</h3>
               </div>
             </Link>
           </div>
