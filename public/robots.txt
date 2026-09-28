@@ -4,4 +4,4 @@ Disallow: /admin
 Disallow: /account
 Disallow: /checkout
 
-Sitemap: https://ieestore.com1/sitemap.xml
+Sitemap: https://www.ieestore.com/sitemap.xml
