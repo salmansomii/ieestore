@@ -22,6 +22,7 @@ const ProductCard = ({ product }) => {
         <img 
           src={product.image} 
           alt={product.name} 
+          loading="lazy"
           className="w-full h-full object-contain"
           style={{ transition: 'transform 0.3s ease' }}
           onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}

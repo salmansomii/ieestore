@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { products as localProducts } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import { useState, useEffect } from 'react';
@@ -10,6 +11,7 @@ const Home = () => {
   const [products, setProducts] = useState(localProducts);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchProducts = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'products'));
@@ -17,7 +19,7 @@ const Home = () => {
         querySnapshot.forEach((doc) => {
           fbProducts.push({ id: doc.id, ...doc.data() });
         });
-        if (fbProducts.length > 0) {
+        if (fbProducts.length > 0 && isMounted) {
           setProducts(fbProducts);
         }
       } catch (error) {
@@ -25,6 +27,7 @@ const Home = () => {
       }
     };
     fetchProducts();
+    return () => { isMounted = false; };
   }, []);
 
   // Demo filtering for sections
@@ -33,6 +36,11 @@ const Home = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Home | IEE Store</title>
+        <meta name="description" content="Welcome to IEE Store. Discover premium baby products, home decor, and fashion up to 70% off retail." />
+      </Helmet>
+
       {/* Hero Section */}
       <section style={{ 
         position: 'relative', 
@@ -65,25 +73,25 @@ const Home = () => {
           <h2 className="text-2xl text-center mb-xl">Shop by Category</h2>
           <div className="grid grid-cols-4 gap-md">
             <Link to="/shop/Baby" className="category-card" style={{ position: 'relative', height: '300px', borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
-              <img src="/product_images/product_2.jpg" alt="Baby" className="w-full h-full object-contain" />
+              <img src="/product_images/product_2.jpg" alt="Baby" loading="lazy" className="w-full h-full object-contain" />
               <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <h3 style={{ color: 'white', fontSize: '2rem', fontWeight: 700 }}>Baby</h3>
               </div>
             </Link>
             <Link to="/shop/Christmas" className="category-card" style={{ position: 'relative', height: '300px', borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
-              <img src="/product_images/product_3.webp" alt="Christmas" className="w-full h-full object-contain" />
+              <img src="/product_images/product_3.webp" alt="Christmas" loading="lazy" className="w-full h-full object-contain" />
               <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <h3 style={{ color: 'white', fontSize: '2rem', fontWeight: 700 }}>Christmas</h3>
               </div>
             </Link>
             <Link to="/shop/Home Product" className="category-card" style={{ position: 'relative', height: '300px', borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
-              <img src="/product_images/product_7.jpg" alt="Home Product" className="w-full h-full object-contain" />
+              <img src="/product_images/product_7.jpg" alt="Home Product" loading="lazy" className="w-full h-full object-contain" />
               <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <h3 style={{ color: 'white', fontSize: '2rem', fontWeight: 700 }}>Home Product</h3>
               </div>
             </Link>
             <Link to="/shop/Fashion" className="category-card" style={{ position: 'relative', height: '300px', borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
-              <img src="/product_images/Coach Teri Brown Shoulder Bag CA548 Signature Canvas Outlet New with Box.webp" alt="Fashion" className="w-full h-full object-contain" />
+              <img src="/product_images/Coach Teri Brown Shoulder Bag CA548 Signature Canvas Outlet New with Box.webp" alt="Fashion" loading="lazy" className="w-full h-full object-contain" />
               <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <h3 style={{ color: 'white', fontSize: '2rem', fontWeight: 700 }}>Fashion</h3>
               </div>

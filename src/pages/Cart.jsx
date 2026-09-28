@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useCart } from '../context/CartContext';
 import { storeConfig } from '../config/store.config';
 import { Trash2, ArrowRight } from 'lucide-react';
@@ -34,6 +35,10 @@ const Cart = () => {
 
   return (
     <div className="container py-xl">
+      <Helmet>
+        <title>Shopping Cart | IEE Store</title>
+        <meta name="description" content="View your shopping cart at IEE Store." />
+      </Helmet>
       <h1 className="text-3xl mb-xl font-bold">Shopping Cart</h1>
       
       <div className="flex flex-col md:flex-row gap-xl" style={{ alignItems: 'flex-start' }}>

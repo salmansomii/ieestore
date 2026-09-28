@@ -318,5 +318,37 @@ export const products = [
     variations: [],
     features: ["Signature Coated Canvas", "White"],
     image: "/product_images/NEW COACH Teri 2Way Shoulder Bag Signature Coated Canvas White outlet CA548.webp"
+  },
+  {
+    id: "n22",
+    name: "This indoor wooden jungle gym is basically a whole playground inside your house! Climbing wall, ladders, monkey bars, rope net AND a swing",
+    category: "Baby",
+    subcategory: "Baby Toys",
+    description: "This indoor wooden jungle gym is basically a whole playground inside your house! Climbing wall, ladders, monkey bars, rope net AND a swing",
+    price: 111.72,
+    compareAtPrice: 399.00,
+    discountPercentage: 72,
+    rating: 4.8,
+    sku: "BBY-WDN-GYM",
+    stock: 20,
+    variations: [],
+    features: ["Climbing wall", "Ladders and monkey bars", "Rope net and swing"],
+    image: "/product_images/This indoor wooden jungle gym is basically a whole playground inside your house! Climbing wall, ladders, monkey bars, rope net AND a swing.jpg"
+  },
+  {
+    id: "n23",
+    name: "Low Loft Bed Twin Size with 9 Storage Drawers, Bookcase & LED Lights, Metal Kids Loft Bed with Stairs and Guardrail",
+    category: "Baby",
+    subcategory: "Baby Furniture",
+    description: "Low Loft Bed Twin Size with 9 Storage Drawers, Bookcase & LED Lights, Metal Kids Loft Bed with Stairs and Guardrail",
+    price: 78.74,
+    compareAtPrice: 254.00,
+    discountPercentage: 69,
+    rating: 4.9,
+    sku: "BBY-LFT-BED",
+    stock: 15,
+    variations: [],
+    features: ["9 Storage Drawers", "Bookcase & LED Lights", "Stairs and Guardrail"],
+    image: "/product_images/Low Loft Bed Twin Size with 9 Storage Drawers, Bookcase & LED Lights, Metal Kids Loft Bed with Stairs and Guardrail.webp"
   }
 ];

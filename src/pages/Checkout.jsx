@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { storeConfig } from '../config/store.config';
-import { Lock, CreditCard } from 'lucide-react';
+import { Lock } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { VisaLogo, MastercardLogo, AmexLogo, DiscoverLogo } from '../components/CardLogos';
 import { db } from '../config/firebase';
 import { collection, addDoc } from 'firebase/firestore';
@@ -121,6 +122,10 @@ const Checkout = () => {
 
   return (
     <div className="container py-xl">
+      <Helmet>
+        <title>Secure Checkout | IEE Store</title>
+        <meta name="description" content="Secure checkout at IEE Store." />
+      </Helmet>
       <div className="flex justify-center items-center mb-xl gap-sm text-success-color">
         <Lock size={20} />
         <h1 className="text-2xl font-bold">Secure Checkout</h1>

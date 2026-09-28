@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { products as localProducts } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { storeConfig } from '../config/store.config';
@@ -18,27 +19,31 @@ const ProductDetails = () => {
   const [selections, setSelections] = useState({});
 
   useEffect(() => {
+    let isMounted = true;
     const fetchProduct = async () => {
       try {
         const docRef = doc(db, 'products', id);
         const docSnap = await getDoc(docRef);
         
-        if (docSnap.exists()) {
+        if (docSnap.exists() && isMounted) {
           setProduct({ id: docSnap.id, ...docSnap.data() });
-        } else {
+        } else if (isMounted) {
           // Fallback to local
           const localMatch = localProducts.find(p => p.id === id);
           if (localMatch) setProduct(localMatch);
         }
       } catch (error) {
         console.error("Error fetching product:", error);
-        const localMatch = localProducts.find(p => p.id === id);
-        if (localMatch) setProduct(localMatch);
+        if (isMounted) {
+          const localMatch = localProducts.find(p => p.id === id);
+          if (localMatch) setProduct(localMatch);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
     fetchProduct();
+    return () => { isMounted = false; };
   }, [id]);
 
   if (loading) {
@@ -83,6 +88,10 @@ const ProductDetails = () => {
 
   return (
     <div className="container py-xl">
+      <Helmet>
+        <title>{product.name} | IEE Store</title>
+        <meta name="description" content={product.description.substring(0, 150) + '...'} />
+      </Helmet>
       <div className="grid md:grid-cols-2 gap-xl" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
         
         {/* Images */}

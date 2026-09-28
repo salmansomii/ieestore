@@ -11,6 +11,7 @@ const Admin = () => {
   const { isAdmin } = useAuth();
 
   useEffect(() => {
+    let isMounted = true;
     const fetchOrders = async () => {
       if (!isAdmin) return;
       try {
@@ -20,18 +21,23 @@ const Admin = () => {
         querySnapshot.forEach((doc) => {
           fbOrders.push({ id: doc.id, ...doc.data() });
         });
-        setOrders(fbOrders);
+        if (isMounted) setOrders(fbOrders);
       } catch (error) {
         console.error("Error fetching orders:", error);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
     fetchOrders();
+    return () => { isMounted = false; };
   }, [isAdmin]);
 
   if (!isAdmin) {
     return <div className="container py-xl text-center text-danger-color font-bold">Access Denied. Admin privileges required.</div>;
+  }
+
+  if (loading) {
+    return <div className="container py-xl text-center">Loading orders...</div>;
   }
 
   return (

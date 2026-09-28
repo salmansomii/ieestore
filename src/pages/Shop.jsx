@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { products as localProducts } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import { Filter } from 'lucide-react';
@@ -14,11 +15,11 @@ const Shop = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [priceRange, setPriceRange] = useState(100);
   const [products, setProducts] = useState(localProducts);
-  const [loading, setLoading] = useState(true);
 
   const initialSearchQuery = searchParams.get('q') || '';
 
   useEffect(() => {
+    let isMounted = true;
     const fetchProducts = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'products'));
@@ -26,16 +27,15 @@ const Shop = () => {
         querySnapshot.forEach((doc) => {
           fbProducts.push({ id: doc.id, ...doc.data() });
         });
-        if (fbProducts.length > 0) {
+        if (fbProducts.length > 0 && isMounted) {
           setProducts(fbProducts);
         }
       } catch (error) {
         console.error("Error fetching products from Firestore:", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchProducts();
+    return () => { isMounted = false; };
   }, []);
   
   const filteredProducts = useMemo(() => {
@@ -74,10 +74,14 @@ const Shop = () => {
     }
 
     return filtered;
-  }, [category, initialSearchQuery, sortBy, priceRange]);
+  }, [category, initialSearchQuery, sortBy, priceRange, products]);
 
   return (
     <div className="container py-xl">
+      <Helmet>
+        <title>{category ? `${category} | Shop` : 'Shop All'} | IEE Store</title>
+        <meta name="description" content={`Browse our selection of ${category ? category.toLowerCase() : 'premium products'} at IEE Store.`} />
+      </Helmet>
       {/* Header */}
       <div className="flex justify-between items-center mb-lg flex-wrap gap-sm">
         <h1 className="text-3xl">
