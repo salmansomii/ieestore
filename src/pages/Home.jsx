@@ -37,7 +37,7 @@ const Home = () => {
   return (
     <div>
       <Helmet>
-        <title>Home | IEE Store</title>
+        <title>Discover Amazing Deals | IEE Store</title>
         <meta name="description" content="Welcome to IEE Store. Discover premium baby products, home decor, and fashion up to 70% off retail." />
       </Helmet>
 
