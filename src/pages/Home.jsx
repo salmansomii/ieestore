@@ -20,7 +20,13 @@ const Home = () => {
           fbProducts.push({ id: doc.id, ...doc.data() });
         });
         if (fbProducts.length > 0 && isMounted) {
-          setProducts(fbProducts);
+          const mergedProducts = [...localProducts];
+          fbProducts.forEach(fbP => {
+            const idx = mergedProducts.findIndex(p => p.id === fbP.id);
+            if (idx !== -1) mergedProducts[idx] = fbP;
+            else mergedProducts.push(fbP);
+          });
+          setProducts(mergedProducts);
         }
       } catch (error) {
         console.error("Error fetching products from Firestore:", error);
@@ -134,6 +140,23 @@ const Home = () => {
           <h2 className="text-2xl text-center mb-xl">New Arrivals</h2>
           <div className="grid grid-cols-4 gap-md">
             {newArrivals.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Baby Products */}
+      <section className="section bg-secondary">
+        <div className="container">
+          <div className="flex justify-between items-center mb-lg">
+            <h2 className="text-2xl">Baby Products</h2>
+            <Link to="/shop/Baby" className="text-muted hover-text font-medium" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              View All <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-4 gap-md">
+            {products.filter(p => p.category === 'Baby').slice(-8).reverse().map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

@@ -320,7 +320,7 @@ export const products = [
     image: "/product_images/NEW COACH Teri 2Way Shoulder Bag Signature Coated Canvas White outlet CA548.webp"
   },
   {
-    id: "n22",
+    id: "local_n22",
     name: "This indoor wooden jungle gym is basically a whole playground inside your house! Climbing wall, ladders, monkey bars, rope net AND a swing",
     category: "Baby",
     subcategory: "Baby Toys",
@@ -336,7 +336,7 @@ export const products = [
     image: "/product_images/This indoor wooden jungle gym is basically a whole playground inside your house! Climbing wall, ladders, monkey bars, rope net AND a swing.jpg"
   },
   {
-    id: "n23",
+    id: "local_n23",
     name: "Low Loft Bed Twin Size with 9 Storage Drawers, Bookcase & LED Lights, Metal Kids Loft Bed with Stairs and Guardrail",
     category: "Baby",
     subcategory: "Baby Furniture",
@@ -350,5 +350,41 @@ export const products = [
     variations: [],
     features: ["9 Storage Drawers", "Bookcase & LED Lights", "Stairs and Guardrail"],
     image: "/product_images/Low Loft Bed Twin Size with 9 Storage Drawers, Bookcase & LED Lights, Metal Kids Loft Bed with Stairs and Guardrail.webp"
+  },
+  {
+    id: "local_n24",
+    name: "twinbling Triple Ghosts Halloween Decorations Outdoor with Solar Lantern,Cute Spooky Halloween Ghost Figurines,Ghost Decor Outside Decor for Yards Porches Gardens Lawn Party",
+    category: "Home Product",
+    subcategory: "Home Decor",
+    description: "twinbling Triple Ghosts Halloween Decorations Outdoor with Solar Lantern,Cute Spooky Halloween Ghost Figurines,Ghost Decor Outside Decor for Yards Porches Gardens Lawn Party",
+    price: 10.99,
+    compareAtPrice: 29.99,
+    discountPercentage: 63,
+    rating: 4.8,
+    sku: "HAL-GHO-DEC",
+    stock: 50,
+    variations: [],
+    features: ["Solar Lantern", "Outdoor Decoration"],
+    image: "/product_images/twinbling Triple Ghosts Halloween Decorations Outdoor with Solar Lantern,Cute Spooky Halloween Ghost Figurines,Ghost Decor Outside Decor for Yards Porches Gardens Lawn Party.jpg",
+    images: [
+      "/product_images/twinbling Triple Ghosts Halloween Decorations Outdoor with Solar Lantern,Cute Spooky Halloween Ghost Figurines,Ghost Decor Outside Decor for Yards Porches Gardens Lawn Party.jpg",
+      "/product_images/twinbling Triple Ghosts Halloween Decorations Outdoor with Solar Lantern,Cute Spooky Halloween Ghost Figurines,Ghost Decor Outside Decor for Yards Porches Gardens Lawn Party2.jpg"
+    ]
+  },
+  {
+    id: "local_n25",
+    name: "Tiny Land Play Tent with Padded Mat & LED Lights, Kids Tent, Playhouse for Kids, Indoor Bed Tent for Toddler, Toys for 3,4,5,6-Year-Old Girls, Neutral Color Play Room Furniture",
+    category: "Baby",
+    subcategory: "Baby Toys",
+    description: "Tiny Land Play Tent with Padded Mat & LED Lights, Kids Tent, Playhouse for Kids, Indoor Bed Tent for Toddler, Toys for 3,4,5,6-Year-Old Girls, Neutral Color Play Room Furniture",
+    price: 14.99,
+    compareAtPrice: 39.99,
+    discountPercentage: 62,
+    rating: 4.9,
+    sku: "BBY-TNT-PLY",
+    stock: 35,
+    variations: [],
+    features: ["Padded Mat", "LED Lights", "Playhouse for Kids"],
+    image: "/product_images/Tiny Land Play Tent with Padded Mat & LED Lights, Kids Tent, Playhouse for Kids, Indoor Bed Tent for Toddler, Toys for 3,4,5,6-Year-Old Girls, Neutral Color Play Room Furniture.jpg"
   }
 ];

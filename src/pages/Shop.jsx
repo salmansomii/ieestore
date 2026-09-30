@@ -28,7 +28,13 @@ const Shop = () => {
           fbProducts.push({ id: doc.id, ...doc.data() });
         });
         if (fbProducts.length > 0 && isMounted) {
-          setProducts(fbProducts);
+          const mergedProducts = [...localProducts];
+          fbProducts.forEach(fbP => {
+            const idx = mergedProducts.findIndex(p => p.id === fbP.id);
+            if (idx !== -1) mergedProducts[idx] = fbP;
+            else mergedProducts.push(fbP);
+          });
+          setProducts(mergedProducts);
         }
       } catch (error) {
         console.error("Error fetching products from Firestore:", error);
