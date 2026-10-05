@@ -73,6 +73,23 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Featured Costumes */}
+      <section className="section">
+        <div className="container">
+          <div className="flex justify-between items-center mb-lg">
+            <h2 className="text-2xl" style={{ fontWeight: 'bold', color: 'var(--accent-color)' }}>New Costumes Collection</h2>
+            <Link to="/shop/Costumes" className="text-muted hover-text font-medium" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              Shop Now <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-3 gap-md">
+            {products.filter(p => p.category === 'Costumes').map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Featured Categories */}
       <section className="section bg-secondary">
         <div className="container">

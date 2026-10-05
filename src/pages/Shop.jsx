@@ -146,6 +146,7 @@ const Shop = () => {
                 <li><a href="/shop" className={`${!category ? 'font-bold' : 'text-muted'}`}>All Products</a></li>
                 <li><a href="/shop/Baby" className={`${category === 'Baby' ? 'font-bold' : 'text-muted'}`}>Baby</a></li>
                 <li><a href="/shop/Christmas" className={`${category === 'Christmas' ? 'font-bold' : 'text-muted'}`}>Christmas</a></li>
+                <li><a href="/shop/Costumes" className={`${category === 'Costumes' ? 'font-bold' : 'text-muted'}`}>Costumes</a></li>
                 <li><a href="/shop/Home Product" className={`${category === 'Home Product' ? 'font-bold' : 'text-muted'}`}>Home Product</a></li>
                 <li><a href="/shop/Fashion" className={`${category === 'Fashion' ? 'font-bold' : 'text-muted'}`}>Fashion</a></li>
               </ul>

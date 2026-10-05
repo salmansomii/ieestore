@@ -386,5 +386,164 @@ export const products = [
     variations: [],
     features: ["Padded Mat", "LED Lights", "Playhouse for Kids"],
     image: "/product_images/Tiny Land Play Tent with Padded Mat & LED Lights, Kids Tent, Playhouse for Kids, Indoor Bed Tent for Toddler, Toys for 3,4,5,6-Year-Old Girls, Neutral Color Play Room Furniture.jpg"
+  },
+  {
+    id: "local_n26",
+    name: "GOTHIC DAUGHTER COSTUME LADIES HALLOWEEN FANCY DRESS BLACK OUTFIT",
+    category: "Costumes",
+    subcategory: "Halloween Costumes",
+    description: "GOTHIC DAUGHTER COSTUME LADIES HALLOWEEN FANCY DRESS BLACK OUTFIT GOTHIC FAMILY",
+    price: 11.00,
+    compareAtPrice: 25.00,
+    discountPercentage: 56,
+    rating: 5.0,
+    sku: "CST-GTH-DAU",
+    stock: 50,
+    variations: [
+      {
+        name: "Size",
+        options: ["Small", "Medium", "Large", "X-Large", "XX-Large"]
+      }
+    ],
+    features: ["Halloween Fancy Dress", "Black Outfit"],
+    image: "/product_images/GOTHIC DAUGHTER COSTUME LADIES HALLOWEEN FANCY DRESS BLACK OUTFIT GOTHIC FAMILY.webp"
+  },
+  {
+    id: "local_n27",
+    name: "HAIRY COUSIN GOTHIC FAMILY HALLOWEEN FANCY DRESS COSTUME",
+    category: "Costumes",
+    subcategory: "Halloween Costumes",
+    description: "HAIRY COUSIN GOTHIC FAMILY HALLOWEEN FANCY DRESS COSTUME CRAZY SCARY OUTFIT IT",
+    price: 10.00,
+    compareAtPrice: 20.00,
+    discountPercentage: 50,
+    rating: 5.0,
+    sku: "CST-HRY-CSN",
+    stock: 50,
+    variations: [
+      {
+        name: "Size",
+        options: ["Small", "Medium", "Large", "X-Large", "XX-Large"]
+      }
+    ],
+    features: ["Crazy Scary Outfit", "Halloween Fancy Dress"],
+    image: "/product_images/HAIRY COUSIN GOTHIC FAMILY HALLOWEEN FANCY DRESS COSTUME CRAZY SCARY OUTFIT IT.webp"
+  },
+  {
+    id: "local_n28",
+    name: "Nightmare Halloween Dream Killer Costume Freddy Krueger Fancy Dress Outfit",
+    category: "Costumes",
+    subcategory: "Halloween Costumes",
+    description: "Nightmare Halloween Dream Killer Costume Freddy Krueger Fancy Dress Outfit",
+    price: 12.00,
+    compareAtPrice: 30.00,
+    discountPercentage: 60,
+    rating: 5.0,
+    sku: "CST-NGT-KLR",
+    stock: 50,
+    variations: [
+      {
+        name: "Size",
+        options: ["Small", "Medium", "Large", "X-Large", "XX-Large"]
+      }
+    ],
+    features: ["Dream Killer Costume", "Fancy Dress Outfit"],
+    image: "/product_images/Nightmare Halloween Dream Killer Costume Freddy Krueger Fancy Dress Outfit.webp"
+  },
+  {
+    id: "local_n29",
+    name: "Float a cloud of glass ornaments over the table, not the whole room",
+    category: "Home Product",
+    subcategory: "Home Decor",
+    description: "Float a cloud of glass ornaments over the table, not the whole room",
+    price: 15.00,
+    compareAtPrice: 45.00,
+    discountPercentage: 67,
+    rating: 4.8,
+    sku: "DEC-GLS-ORN",
+    stock: 40,
+    variations: [],
+    features: ["Glass ornaments", "Table decor"],
+    image: "/product_images/Float a cloud of glass ornaments over the table, not the whole room.webp"
+  },
+  {
+    id: "local_n30",
+    name: "Elegantly Designed Sweater - Black",
+    category: "Fashion",
+    subcategory: "Sweaters",
+    description: "Elegantly Designed Sweater - Black",
+    price: 30.00,
+    compareAtPrice: 60.00,
+    discountPercentage: 50,
+    rating: 4.9,
+    sku: "FAS-SWE-BLK",
+    stock: 30,
+    variations: [],
+    features: ["Elegantly Designed", "Black Color"],
+    image: "/product_images/Elegantly Designed Sweater - Black.jpg"
+  },
+  {
+    id: "local_n31",
+    name: "Halloween Pumpkin Bat Faux Knit Print Long Sleeve Top, Spooky Jack O Lantern Fall Pullover, Halloween Party Casual Women's Autumn Shirt",
+    category: "Fashion",
+    subcategory: "Shirts",
+    description: "Halloween Pumpkin Bat Faux Knit Print Long Sleeve Top, Spooky Jack O Lantern Fall Pullover, Halloween Party Casual Women's Autumn Shirt",
+    price: 25.00,
+    compareAtPrice: 50.00,
+    discountPercentage: 50,
+    rating: 4.7,
+    sku: "FAS-HAL-PUM",
+    stock: 60,
+    variations: [],
+    features: ["Halloween Pumpkin Bat Faux Knit Print", "Long Sleeve Top"],
+    image: "/product_images/Halloween Pumpkin Bat Faux Knit Print Long Sleeve Top, Spooky Jack O Lantern Fall Pullover, Halloween Party Casual Women's Autumn Shirt.jpg"
+  },
+  {
+    id: "local_n32",
+    name: "Spooky Season Velvet Long Sleeve Halloween Shirt",
+    category: "Fashion",
+    subcategory: "Shirts",
+    description: "Spooky Season Velvet Long Sleeve Halloween Shirt",
+    price: 28.00,
+    compareAtPrice: 56.00,
+    discountPercentage: 50,
+    rating: 4.8,
+    sku: "FAS-SPO-VEL",
+    stock: 45,
+    variations: [],
+    features: ["Spooky Season", "Velvet Long Sleeve"],
+    image: "/product_images/Spooky Season Velvet Long Sleeve Halloween Shirt.jpg"
+  },
+  {
+    id: "local_n33",
+    name: "Women's Black T-Shirt, Lace Ghost With Bow And Floral Moon Design, Halloween Christmas Hot , Gift For Women Girls Friends",
+    category: "Fashion",
+    subcategory: "Shirts",
+    description: "Women's Black T-Shirt, Lace Ghost With Bow And Floral Moon Design, Halloween Christmas Hot , Gift For Women Girls Friends",
+    price: 20.00,
+    compareAtPrice: 40.00,
+    discountPercentage: 50,
+    rating: 4.9,
+    sku: "FAS-WOM-BLK",
+    stock: 55,
+    variations: [],
+    features: ["Lace Ghost With Bow And Floral Moon Design", "Black T-Shirt"],
+    image: "/product_images/Women's Black T-Shirt, Lace Ghost With Bow And Floral Moon Design, Halloween Christmas Hot , Gift For Women Girls Friends.jpg"
+  },
+  {
+    id: "local_n34",
+    name: "Black 1950s Halter Sweetheart Neck Tulle Halloween Dress",
+    category: "Fashion",
+    subcategory: "Dresses",
+    description: "Black 1950s Halter Sweetheart Neck Tulle Halloween Dress",
+    price: 40.00,
+    compareAtPrice: 80.00,
+    discountPercentage: 50,
+    rating: 5.0,
+    sku: "FAS-BLK-1950",
+    stock: 25,
+    variations: [],
+    features: ["1950s Halter Sweetheart Neck", "Tulle Halloween Dress"],
+    image: "/product_images/Black 1950s Halter Sweetheart Neck Tulle Halloween Dress.webp"
   }
 ];
