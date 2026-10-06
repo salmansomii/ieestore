@@ -641,5 +641,89 @@ export const products = [
     variations: [],
     features: ["Coffin Shape", "Pumpkin Jack-o'-Lantern", "Heart Spider Web"],
     image: "/product_images/nails4.jpeg"
+  },
+  {
+    id: "local_n41",
+    name: "Halloween Women's T Shirt Print Graphic Pumpkin Vintage Stylish Classic Short Sleeve Crew Neck Regular Tops Casual Daily Weekend",
+    category: "Fashion",
+    subcategory: "Shirts",
+    description: "Step into the spooky season with this Halloween Women's T-Shirt! Featuring a stylish vintage graphic pumpkin print, this classic short sleeve crew neck top is perfect for casual daily wear, weekend outings, or Halloween parties. Designed to bring a fun and festive vibe to your fall and winter wardrobe, it offers a comfortable regular fit that pairs effortlessly with jeans or leggings.",
+    price: 24.45,
+    compareAtPrice: 45.00,
+    discountPercentage: 45,
+    rating: 4.8,
+    sku: "FAS-HAL-SHR-1",
+    stock: 80,
+    variations: [
+      {
+        name: "Size",
+        options: ["S", "M", "L"]
+      }
+    ],
+    features: ["Vintage Pumpkin Graphic Print", "Classic Short Sleeve Crew Neck", "Comfortable Regular Fit"],
+    image: "/product_images/shirt 1.jpeg"
+  },
+  {
+    id: "local_n42",
+    name: "Pumpkin Face Shirt Halloween Shirt Group Halloween Party Tee Spooky Season Shirts Jack O Lantern Shirt Family Halloween Kids",
+    category: "Fashion",
+    subcategory: "Shirts",
+    description: "Celebrate Halloween in style with our Pumpkin Face Shirt! This fun and festive Jack-O'-Lantern tee is perfect for group Halloween parties, spooky season events, or a matching family outfit. The comfortable and casual design makes it great for kids and adults alike, ensuring everyone has a memorable and spooky Halloween experience.",
+    price: 7.88,
+    compareAtPrice: 15.00,
+    discountPercentage: 47,
+    rating: 4.9,
+    sku: "FAS-HAL-SHR-2",
+    stock: 120,
+    variations: [
+      {
+        name: "Size",
+        options: ["S", "M", "L"]
+      }
+    ],
+    features: ["Spooky Jack-O'-Lantern Design", "Perfect for Family & Group Outfits", "Soft and Comfortable Fabric"],
+    image: "/product_images/shirt2.jpeg"
+  },
+  {
+    id: "local_n43",
+    name: "Trendy Queen Women's 2 Piece 2026 Fall Fashion Lounge Set with Pockets - Coffee",
+    category: "Fashion",
+    subcategory: "Lounge Sets",
+    description: "Upgrade your casual wardrobe with the Trendy Queen Women's 2-Piece Lounge Set. This stylish 2026 fall fashion outfit comes in a beautiful coffee color and includes a cozy top paired with matching bottoms featuring convenient pockets. Perfect for lounging at home, running errands, or enjoying a relaxed weekend in ultimate comfort and style.",
+    price: 19.44,
+    compareAtPrice: 40.00,
+    discountPercentage: 51,
+    rating: 4.7,
+    sku: "FAS-FAL-LNG-1",
+    stock: 50,
+    variations: [
+      {
+        name: "Size",
+        options: ["S", "M", "L"]
+      }
+    ],
+    features: ["2-Piece Matching Lounge Set", "Convenient Side Pockets", "Trendy Fall Fashion Coffee Color"],
+    image: "/product_images/shirt3.jpeg"
+  },
+  {
+    id: "local_n44",
+    name: "Zeagoo Women's 2026 Fall V Neck Sweater Long Sleeve Lightweight Knit Tops Cute Ribbed Loose Fit Trendy Business Casual",
+    category: "Fashion",
+    subcategory: "Sweaters",
+    description: "Stay cozy and chic with the Zeagoo Women's 2026 Fall V-Neck Sweater. This lightweight, ribbed knit long-sleeve top offers a cute and trendy loose fit that effortlessly flatters any figure. Versatile enough for both spring and fall seasons, it's an ideal choice for business casual outfits, everyday wear, or dressing up for a stylish evening out.",
+    price: 20.00,
+    compareAtPrice: 50.00,
+    discountPercentage: 60,
+    rating: 5.0,
+    sku: "FAS-FAL-SWE-1",
+    stock: 60,
+    variations: [
+      {
+        name: "Size",
+        options: ["S", "M", "L"]
+      }
+    ],
+    features: ["Elegant V-Neck Design", "Lightweight Ribbed Knit", "Versatile Loose Fit"],
+    image: "/product_images/shirt4.jpeg"
   }
 ];
