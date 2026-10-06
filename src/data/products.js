@@ -545,5 +545,21 @@ export const products = [
     variations: [],
     features: ["1950s Halter Sweetheart Neck", "Tulle Halloween Dress"],
     image: "/product_images/Black 1950s Halter Sweetheart Neck Tulle Halloween Dress.webp"
+  },
+  {
+    id: "local_n35",
+    name: "Halloween Spooky Ghost & Spider Web Press-On Nails",
+    category: "Beauty",
+    subcategory: "Nails",
+    description: "Get ready for Halloween with these spooky and cute long square press-on nails. Featuring a nude pink base with 3D ghost faces, black spider webs with bows, and black drip designs. Easy to apply and perfect for any Halloween party!",
+    price: 5.00,
+    compareAtPrice: 15.00,
+    discountPercentage: 66,
+    rating: 4.9,
+    sku: "BEA-HAL-NLS",
+    stock: 100,
+    variations: [],
+    features: ["3D Ghost Face", "Spider Web & Bow Design", "Long Square Shape"],
+    image: "/product_images/nails.jpeg"
   }
 ];
