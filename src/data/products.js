@@ -561,5 +561,21 @@ export const products = [
     variations: [],
     features: ["3D Ghost Face", "Spider Web & Bow Design", "Long Square Shape"],
     image: "/product_images/nails.jpeg"
+  },
+  {
+    id: "local_n36",
+    name: "Halloween Graveyard & Bats Press-On Nails",
+    category: "Beauty",
+    subcategory: "Nails",
+    description: "Creepy and stylish long square press-on nails for Halloween! These nails feature a nude pink base with black and white designs, including spider webs, a spooky graveyard, flying bats, and black glitter accents. Perfect for a striking Halloween look.",
+    price: 5.00,
+    compareAtPrice: 15.00,
+    discountPercentage: 66,
+    rating: 4.8,
+    sku: "BEA-HAL-NLS-2",
+    stock: 100,
+    variations: [],
+    features: ["Graveyard & Bats Design", "Black Glitter Accents", "Long Square Shape"],
+    image: "/product_images/nail.jpeg"
   }
 ];
