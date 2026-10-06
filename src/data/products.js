@@ -471,15 +471,20 @@ export const products = [
     name: "Elegantly Designed Sweater - Black",
     category: "Fashion",
     subcategory: "Sweaters",
-    description: "Elegantly Designed Sweater - Black",
+    description: "Stay warm and stylish with this elegantly designed black sweater. The soft, premium fabric provides unmatched comfort while the chic aesthetic easily transitions from a casual day out to a relaxed evening gathering. A versatile staple for your winter and fall wardrobe.",
     price: 17.65,
     compareAtPrice: 60.00,
     discountPercentage: 50,
     rating: 4.9,
     sku: "FAS-SWE-BLK",
     stock: 30,
-    variations: [],
-    features: ["Elegantly Designed", "Black Color"],
+    variations: [
+      {
+        name: "Size",
+        options: ["S", "M", "L"]
+      }
+    ],
+    features: ["Elegantly Designed", "Black Color", "Cozy and Comfortable"],
     image: "/product_images/Elegantly Designed Sweater - Black.jpg"
   },
   {
@@ -487,15 +492,20 @@ export const products = [
     name: "Halloween Pumpkin Bat Faux Knit Print Long Sleeve Top, Spooky Jack O Lantern Fall Pullover, Halloween Party Casual Women's Autumn Shirt",
     category: "Fashion",
     subcategory: "Shirts",
-    description: "Halloween Pumpkin Bat Faux Knit Print Long Sleeve Top, Spooky Jack O Lantern Fall Pullover, Halloween Party Casual Women's Autumn Shirt",
+    description: "Get ready for the spooky season with this Halloween Pumpkin Bat Faux Knit Print Long Sleeve Top. Perfect for Halloween parties, fall outings, or casual everyday wear, this soft pullover features a festive Jack-O'-Lantern and bat design. Pair it perfectly with your favorite jeans for a cozy autumn look.",
     price: 15.00,
     compareAtPrice: 50.00,
     discountPercentage: 50,
     rating: 4.7,
     sku: "FAS-HAL-PUM",
     stock: 60,
-    variations: [],
-    features: ["Halloween Pumpkin Bat Faux Knit Print", "Long Sleeve Top"],
+    variations: [
+      {
+        name: "Size",
+        options: ["S", "M", "L"]
+      }
+    ],
+    features: ["Halloween Pumpkin Bat Faux Knit Print", "Long Sleeve Top", "Cozy Autumn Pullover"],
     image: "/product_images/Halloween Pumpkin Bat Faux Knit Print Long Sleeve Top, Spooky Jack O Lantern Fall Pullover, Halloween Party Casual Women's Autumn Shirt.jpg"
   },
   {
@@ -503,15 +513,20 @@ export const products = [
     name: "Spooky Season Velvet Long Sleeve Halloween Shirt",
     category: "Fashion",
     subcategory: "Shirts",
-    description: "Spooky Season Velvet Long Sleeve Halloween Shirt",
+    description: "Elevate your Halloween attire with this Spooky Season Velvet Long Sleeve Halloween Shirt. Crafted from soft, luxurious velvet material, it offers both comfort and a touch of elegance to your festive look. Ideal for Halloween events, chilly autumn nights, and cozy lounging.",
     price: 19.56,
     compareAtPrice: 56.00,
     discountPercentage: 50,
     rating: 4.8,
     sku: "FAS-SPO-VEL",
     stock: 45,
-    variations: [],
-    features: ["Spooky Season", "Velvet Long Sleeve"],
+    variations: [
+      {
+        name: "Size",
+        options: ["S", "M", "L"]
+      }
+    ],
+    features: ["Spooky Season", "Velvet Long Sleeve", "Luxurious and Soft"],
     image: "/product_images/Spooky Season Velvet Long Sleeve Halloween Shirt.jpg"
   },
   {
@@ -519,15 +534,20 @@ export const products = [
     name: "Women's Black T-Shirt, Lace Ghost With Bow And Floral Moon Design, Halloween Christmas Hot , Gift For Women Girls Friends",
     category: "Fashion",
     subcategory: "Shirts",
-    description: "Women's Black T-Shirt, Lace Ghost With Bow And Floral Moon Design, Halloween Christmas Hot , Gift For Women Girls Friends",
+    description: "Add a magical touch to your casual wardrobe with this Women's Black T-Shirt featuring an adorable lace ghost with a bow and floral moon design. A versatile and cute tee perfect for Halloween, casual gatherings, or as a thoughtful gift for women and girls who love whimsical aesthetics.",
     price: 12.78,
     compareAtPrice: 40.00,
     discountPercentage: 50,
     rating: 4.9,
     sku: "FAS-WOM-BLK",
     stock: 55,
-    variations: [],
-    features: ["Lace Ghost With Bow And Floral Moon Design", "Black T-Shirt"],
+    variations: [
+      {
+        name: "Size",
+        options: ["S", "M", "L"]
+      }
+    ],
+    features: ["Lace Ghost With Bow And Floral Moon Design", "Black T-Shirt", "Whimsical & Cute Design"],
     image: "/product_images/Women's Black T-Shirt, Lace Ghost With Bow And Floral Moon Design, Halloween Christmas Hot , Gift For Women Girls Friends.jpg"
   },
   {
@@ -535,15 +555,20 @@ export const products = [
     name: "Black 1950s Halter Sweetheart Neck Tulle Halloween Dress",
     category: "Fashion",
     subcategory: "Dresses",
-    description: "Black 1950s Halter Sweetheart Neck Tulle Halloween Dress",
+    description: "Channel a classic retro vibe this Halloween with our Black 1950s Halter Sweetheart Neck Tulle Halloween Dress. The elegant sweetheart neckline and gorgeous tulle skirt create a flattering silhouette that's perfect for vintage-themed events, Halloween parties, or evening galas. Stand out with timeless style.",
     price: 29.00,
     compareAtPrice: 80.00,
     discountPercentage: 50,
     rating: 5.0,
     sku: "FAS-BLK-1950",
     stock: 25,
-    variations: [],
-    features: ["1950s Halter Sweetheart Neck", "Tulle Halloween Dress"],
+    variations: [
+      {
+        name: "Size",
+        options: ["S", "M", "L"]
+      }
+    ],
+    features: ["1950s Halter Sweetheart Neck", "Tulle Halloween Dress", "Classic Retro Silhouette"],
     image: "/product_images/Black 1950s Halter Sweetheart Neck Tulle Halloween Dress.webp"
   },
   {
