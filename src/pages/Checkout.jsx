@@ -111,7 +111,7 @@ const Checkout = () => {
       await addDoc(collection(db, 'orders'), orderData);
       
       clearCart();
-      alert('Order placed successfully! Thank you for your purchase.');
+      alert('try again');
       navigate('/');
     } catch (error) {
       console.error("Error placing order:", error);
