@@ -7,6 +7,7 @@ import { Truck, CheckCircle2, ShoppingBag, ArrowLeft, ShieldCheck, MapPin, Chevr
 import { Helmet } from 'react-helmet-async';
 import { db } from '../config/firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import { sendOrderConfirmationEmail } from '../services/emailService';
 
 const Checkout = () => {
   const { cart, cartSubtotal, clearCart, showToast } = useCart();
@@ -113,6 +114,13 @@ const Checkout = () => {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       setOrderSuccess(placedOrder);
       setIsProcessing(false);
+
+      // Auto-send confirmation email to customer (if email was provided, NO SIGNUP required)
+      if (shippingInfo.email && shippingInfo.email.includes('@')) {
+        sendOrderConfirmationEmail(placedOrder).catch(err => {
+          console.error('Error sending confirmation email:', err);
+        });
+      }
     } catch (error) {
       console.error("Error placing order:", error);
       showToast('Issue submitting order. Please check internet connection or call WhatsApp.', 'info');
