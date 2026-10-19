@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { storeConfig } from '../config/store.config';
-import { Truck, CheckCircle2, ShoppingBag, ArrowLeft, ShieldCheck, MapPin, ChevronDown, ChevronUp, Printer, MessageCircle } from 'lucide-react';
+import { Truck, CheckCircle2, ShoppingBag, ArrowLeft, ShieldCheck, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { db } from '../config/firebase';
 import { collection, addDoc } from 'firebase/firestore';
@@ -60,10 +60,6 @@ const Checkout = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setShippingInfo(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   const handleSubmit = async (e) => {
@@ -249,42 +245,20 @@ const Checkout = () => {
             </div>
           </div>
 
-          <p className="text-xs text-center text-muted mb-md">
-            Our representative will call your number (<strong>{orderSuccess.contact.phone}</strong>) before dispatching to verify your address.
-          </p>
-
-          {/* Action Buttons */}
-          <div className="flex justify-center gap-xs flex-wrap no-print">
-            <button
-              onClick={handlePrint}
-              className="btn btn-secondary text-xs"
-              style={{ padding: '0.65rem 1.25rem', minHeight: '38px', fontWeight: 700 }}
-            >
-              <Printer size={15} /> Print / Save Slip
-            </button>
-
-            <a
-              href={`https://wa.me/923274000155?text=${encodeURIComponent(`Hello Taicon Store, I just placed order #${orderSuccess.orderNumber} for ${currencySymbol}${orderSuccess.summary.total.toLocaleString()}. Please confirm.`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn text-xs"
-              style={{
-                backgroundColor: '#25D366',
-                color: '#ffffff',
-                fontWeight: 700,
-                padding: '0.65rem 1.25rem',
-                minHeight: '38px',
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
+          {/* Action Button */}
+          <div className="flex justify-center mt-md no-print">
+            <Link 
+              to="/" 
+              className="btn btn-primary text-sm font-bold" 
+              style={{ 
+                backgroundColor: '#ea580c', 
+                borderColor: '#ea580c', 
+                padding: '0.75rem 2rem', 
+                minHeight: '42px',
+                borderRadius: '8px'
               }}
             >
-              <MessageCircle size={15} /> Confirm on WhatsApp
-            </a>
-
-            <Link to="/" className="btn btn-primary text-xs" style={{ padding: '0.65rem 1.25rem', minHeight: '38px' }}>
-              Return to Home
+              Continue Shopping
             </Link>
           </div>
 
