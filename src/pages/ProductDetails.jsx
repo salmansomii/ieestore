@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { products as localProducts } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { storeConfig } from '../config/store.config';
-import { Check, Shield, Truck, MessageSquare, ArrowLeft, Plus, ShoppingBag } from 'lucide-react';
+import { Check, Shield, Truck, MessageSquare, ArrowLeft, Plus, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { db } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -17,7 +17,11 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selections, setSelections] = useState({});
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const { currencySymbol } = storeConfig.settings;
+
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -39,7 +43,10 @@ const ProductDetails = () => {
           if (localMatch) setProduct(localMatch);
         }
       } finally {
-        if (isMounted) setLoading(false);
+        if (isMounted) {
+          setSelectedImageIndex(0);
+          setLoading(false);
+        }
       }
     };
     fetchProduct();
@@ -66,6 +73,40 @@ const ProductDetails = () => {
       </div>
     );
   }
+
+  const productImages = product.images && product.images.length > 0 
+    ? product.images 
+    : [product.image];
+
+  const currentImage = productImages[selectedImageIndex] || product.image;
+
+  const handleNextImage = () => {
+    setSelectedImageIndex(prev => (prev === productImages.length - 1 ? 0 : prev + 1));
+  };
+
+  const handlePrevImage = () => {
+    setSelectedImageIndex(prev => (prev === 0 ? productImages.length - 1 : prev - 1));
+  };
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const diff = touchStartX.current - touchEndX.current;
+    if (diff > 40) {
+      handleNextImage(); // swipe left
+    } else if (diff < -40) {
+      handlePrevImage(); // swipe right
+    }
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
 
   const handleSelection = (variationName, option) => {
     setSelections(prev => ({ ...prev, [variationName]: option }));
@@ -109,12 +150,13 @@ const ProductDetails = () => {
 
       <div className="grid md:grid-cols-2 gap-lg" style={{ alignItems: 'flex-start' }}>
         
-        {/* Product Image */}
+        {/* Amazon-Style Product Image Gallery */}
         <div>
+          {/* Main Showcase Image */}
           <div 
             style={{ 
               position: 'relative', 
-              borderRadius: '14px', 
+              borderRadius: '16px', 
               overflow: 'hidden', 
               backgroundColor: '#ffffff', 
               aspectRatio: '1/1', 
@@ -122,17 +164,28 @@ const ProductDetails = () => {
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
-              padding: '1rem',
-              boxShadow: 'var(--shadow-sm)'
+              padding: '1.25rem',
+              boxShadow: 'var(--shadow-sm)',
+              userSelect: 'none'
             }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <img 
-              src={product.image} 
-              alt={product.name} 
+              key={currentImage}
+              src={currentImage} 
+              alt={`${product.name} view ${selectedImageIndex + 1}`} 
               className="w-full h-full"
-              style={{ objectFit: 'contain' }}
+              style={{ 
+                objectFit: 'contain',
+                transition: 'opacity 0.25s ease-in-out',
+                animation: 'imgFade 0.25s ease'
+              }}
               fetchpriority="high"
             />
+
+            {/* Discount Badge */}
             {product.discountPercentage > 0 && (
               <div 
                 style={{ 
@@ -150,7 +203,134 @@ const ProductDetails = () => {
                 Save {product.discountPercentage}%
               </div>
             )}
+
+            {/* Image Counter Badge */}
+            {productImages.length > 1 && (
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '12px',
+                  right: '12px',
+                  backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                  color: '#ffffff',
+                  padding: '2px 8px',
+                  borderRadius: '999px',
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
+                  backdropFilter: 'blur(4px)'
+                }}
+              >
+                {selectedImageIndex + 1} / {productImages.length}
+              </div>
+            )}
+
+            {/* Previous Image Arrow (if multiple images) */}
+            {productImages.length > 1 && (
+              <button
+                onClick={handlePrevImage}
+                style={{
+                  position: 'absolute',
+                  left: '8px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  color: '#0f172a',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                }}
+                aria-label="Previous Image"
+              >
+                <ChevronLeft size={20} />
+              </button>
+            )}
+
+            {/* Next Image Arrow (if multiple images) */}
+            {productImages.length > 1 && (
+              <button
+                onClick={handleNextImage}
+                style={{
+                  position: 'absolute',
+                  right: '8px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  color: '#0f172a',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                }}
+                aria-label="Next Image"
+              >
+                <ChevronRight size={20} />
+              </button>
+            )}
           </div>
+
+          {/* Amazon-Style Thumbnails Row Below Main Image */}
+          {productImages.length > 1 && (
+            <div 
+              style={{ 
+                display: 'flex', 
+                gap: '0.625rem', 
+                marginTop: '0.875rem',
+                overflowX: 'auto',
+                paddingBottom: '4px',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none'
+              }}
+            >
+              {productImages.map((img, idx) => {
+                const isSelected = selectedImageIndex === idx;
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImageIndex(idx)}
+                    onMouseEnter={() => setSelectedImageIndex(idx)}
+                    style={{
+                      width: '68px',
+                      height: '68px',
+                      flexShrink: 0,
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      backgroundColor: '#ffffff',
+                      border: isSelected ? '2px solid #ea580c' : '1px solid var(--border-color)',
+                      boxShadow: isSelected ? '0 0 0 2px rgba(234, 88, 12, 0.2)' : 'none',
+                      opacity: isSelected ? 1 : 0.65,
+                      padding: '4px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      outline: 'none',
+                      transform: isSelected ? 'scale(1.03)' : 'scale(1)'
+                    }}
+                    aria-label={`Select image ${idx + 1}`}
+                  >
+                    <img 
+                      src={img} 
+                      alt={`Thumbnail ${idx + 1}`} 
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'contain' 
+                      }} 
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Product Info */}
@@ -305,6 +485,14 @@ const ProductDetails = () => {
           </button>
         </div>
       </div>
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @keyframes imgFade {
+          from { opacity: 0.4; transform: scale(0.98); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}} />
     </div>
   );
 };
