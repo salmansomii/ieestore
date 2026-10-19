@@ -452,3 +452,45 @@ h1, h2, h3, h4, h5, h6 {
     padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
   }
 }
+
+/* Modal Slip Pop Animation */
+@keyframes slipPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Print Stylesheet for Official Slip */
+@media print {
+  body {
+    padding-bottom: 0 !important;
+    background: white !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #printable-order-slip,
+  #printable-order-slip * {
+    visibility: visible;
+  }
+  #printable-order-slip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
