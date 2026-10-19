@@ -1,22 +1,23 @@
 export const storeConfig = {
-  storeName: "TrendKids USA",
-  logoText: "TrendKids",
+  storeName: "Taicon Store",
+  logoText: "Taicon",
+  domain: "taicon.store",
   contact: {
-    email: "support@ieestore.com",
-    phone: "+44 7886 078196",
+    email: "salmantariq11786@gmail.com",
+    phone: "+92 327 4000155",
+    address: "G-3 Ohad Center, G Floor, Opp: State Bank, Near HBL Bank, Mall Road, Lahore"
   },
   social: {
     facebook: "https://facebook.com",
     instagram: "https://instagram.com",
-    twitter: "https://twitter.com",
+    whatsapp: "https://wa.me/923274000155",
   },
   settings: {
-    currency: "USD",
-    currencySymbol: "$",
-    shippingThreshold: 50.00, // Free shipping over this amount
-    flatShippingRate: 5.99,
-    taxRate: 0.08, // 8% average sales tax demo
+    currency: "PKR",
+    currencySymbol: "Rs. ",
+    shippingThreshold: 5000, // Free shipping over this amount
+    flatShippingRate: 250,
+    taxRate: 0,
   },
-  // If left empty, default checkout is used. If URL provided, it redirects with cart data.
   customCheckoutUrl: "", 
 };

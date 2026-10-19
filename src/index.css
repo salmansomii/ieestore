@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
   /* Colors */
@@ -6,8 +5,8 @@
   --bg-secondary: #f7f7f9;
   --text-primary: #1a1a1a;
   --text-secondary: #666666;
-  --accent-color: #000000;
-  --accent-hover: #333333;
+  --accent-color: #ea580c;
+  --accent-hover: #c2410c;
   --danger-color: #d32f2f;
   --success-color: #2e7d32;
   --border-color: #e0e0e0;

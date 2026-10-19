@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { storeConfig } from '../config/store.config';
-import { Lock } from 'lucide-react';
+import { Truck, CheckCircle2, ShoppingBag, ArrowLeft, ShieldCheck, MapPin } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
-import { VisaLogo, MastercardLogo, AmexLogo, DiscoverLogo } from '../components/CardLogos';
 import { db } from '../config/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
@@ -13,296 +12,427 @@ const Checkout = () => {
   const { cart, cartSubtotal, clearCart } = useCart();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const { currencySymbol, shippingThreshold, flatShippingRate, taxRate } = storeConfig.settings;
+  const { currencySymbol, shippingThreshold, flatShippingRate } = storeConfig.settings;
+  
   const [isProcessing, setIsProcessing] = useState(false);
-  const [cardNumber, setCardNumber] = useState('');
-  const [dob, setDob] = useState('');
-  const [cardType, setCardType] = useState('Unknown');
-  const [selectedCountry, setSelectedCountry] = useState('United States');
+  const [orderSuccess, setOrderSuccess] = useState(null);
 
-  const countryStates = {
-    'United States': [
-      'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-    ],
-    'United Kingdom': [
-      'England', 'Scotland', 'Wales', 'Northern Ireland'
-    ],
-    'Thailand': [
-      'Bangkok', 'Amnat Charoen', 'Ang Thong', 'Bueng Kan', 'Buriram', 'Chachoengsao', 'Chai Nat', 'Chaiyaphum', 'Chanthaburi', 'Chiang Mai', 'Chiang Rai', 'Chonburi', 'Chumphon', 'Kalasin', 'Kamphaeng Phet', 'Kanchanaburi', 'Khon Kaen', 'Krabi', 'Lampang', 'Lamphun', 'Loei', 'Lopburi', 'Mae Hong Son', 'Maha Sarakham', 'Mukdahan', 'Nakhon Nayok', 'Nakhon Pathom', 'Nakhon Phanom', 'Nakhon Ratchasima', 'Nakhon Sawan', 'Nakhon Si Thammarat', 'Nan', 'Narathiwat', 'Nong Bua Lamphu', 'Nong Khai', 'Nonthaburi', 'Pathum Thani', 'Pattani', 'Phang Nga', 'Phatthalung', 'Phayao', 'Phetchabun', 'Phetchaburi', 'Phichit', 'Phitsanulok', 'Phra Nakhon Si Ayutthaya', 'Phrae', 'Phuket', 'Prachinburi', 'Prachuap Khiri Khan', 'Ranong', 'Ratchaburi', 'Rayong', 'Roi Et', 'Sa Kaeo', 'Sakon Nakhon', 'Samut Prakan', 'Samut Sakhon', 'Samut Songkhram', 'Saraburi', 'Satun', 'Sing Buri', 'Sisaket', 'Songkhla', 'Sukhothai', 'Suphan Buri', 'Surat Thani', 'Surin', 'Tak', 'Trang', 'Trat', 'Ubon Ratchathani', 'Udon Thani', 'Uthai Thani', 'Uttaradit', 'Yala', 'Yasothon'
-    ]
-  };
+  const [shippingInfo, setShippingInfo] = useState({
+    fullName: '',
+    phone: '',
+    altPhone: '',
+    email: '',
+    address: '',
+    city: 'Lahore',
+    province: 'Punjab',
+    notes: ''
+  });
 
-  const detectCardType = (num) => {
-    const cleanNum = num.replace(/\D/g, '');
-    if (/^4/.test(cleanNum)) return 'Visa';
-    if (/^5[1-5]/.test(cleanNum)) return 'Mastercard';
-    if (/^3[47]/.test(cleanNum)) return 'Amex';
-    if (/^6(?:011|5)/.test(cleanNum)) return 'Discover';
-    return 'Unknown';
-  };
+  const pakistaniCities = [
+    'Lahore', 'Karachi', 'Islamabad', 'Rawalpindi', 'Faisalabad', 
+    'Multan', 'Gujranwala', 'Peshawar', 'Quetta', 'Sialkot', 
+    'Sargodha', 'Bahawalpur', 'Sukkur', 'Gujrat', 'Sheikhupura', 
+    'Jhang', 'Rahim Yar Khan', 'Mardan', 'Kasur', 'Other'
+  ];
 
-  const handleCardNumberChange = (e) => {
-    let value = e.target.value.replace(/\D/g, ''); // remove non-digits
-    if (value.length > 16) value = value.slice(0, 16);
-    
-    setCardType(detectCardType(value));
-    
-    value = value.replace(/(.{4})/g, '$1 ').trim(); // add space after every 4 digits
-    setCardNumber(value);
-  };
-
-  const handleDobChange = (e) => {
-    let value = e.target.value.replace(/\D/g, ''); // remove non-digits
-    if (value.length > 4) value = value.slice(0, 4);
-    if (value.length >= 3) {
-      value = `${value.slice(0, 2)}/${value.slice(2)}`; // add slash after 2 digits
-    }
-    setDob(value);
-  };
+  const provinces = [
+    'Punjab', 'Sindh', 'Khyber Pakhtunkhwa', 'Balochistan', 
+    'Islamabad Capital Territory', 'Azad Jammu & Kashmir', 'Gilgit-Baltistan'
+  ];
 
   useEffect(() => {
-    if (cart.length === 0 && !isProcessing) {
+    if (cart.length === 0 && !isProcessing && !orderSuccess) {
       navigate('/cart');
     }
-  }, [cart, navigate, isProcessing]);
+  }, [cart, navigate, isProcessing, orderSuccess]);
 
   const shipping = cartSubtotal >= shippingThreshold || cartSubtotal === 0 ? 0 : flatShippingRate;
-  const tax = cartSubtotal * taxRate;
-  const total = cartSubtotal + shipping + tax;
+  const total = cartSubtotal + shipping;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setShippingInfo(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
-    
-    const formData = new FormData(e.target);
+
+    const orderNumber = 'TAI-' + Math.floor(100000 + Math.random() * 900000);
     const orderData = {
+      orderNumber: orderNumber,
       userId: currentUser ? currentUser.uid : 'guest',
       date: new Date().toISOString(),
       contact: {
-        email: formData.get('email'),
-        phone: formData.get('phone')
+        email: shippingInfo.email || 'N/A',
+        phone: shippingInfo.phone,
+        altPhone: shippingInfo.altPhone || ''
       },
       shipping: {
-        firstName: formData.get('firstName'),
-        lastName: formData.get('lastName'),
-        address: formData.get('address'),
-        city: formData.get('city'),
-        state: formData.get('state'),
-        zip: formData.get('zip'),
-        country: formData.get('country')
+        fullName: shippingInfo.fullName,
+        address: shippingInfo.address,
+        city: shippingInfo.city,
+        province: shippingInfo.province,
+        notes: shippingInfo.notes || ''
       },
       payment: {
-        funCardName: formData.get('funCardName'),
-        funCardNumber: formData.get('funCardNumber'),
-        dobMonthYear: formData.get('dobMonthYear'),
-        fav3Numbers: formData.get('fav3Numbers')
+        method: 'Cash on Delivery (COD)',
+        status: 'Unpaid (COD)'
       },
       items: cart,
       summary: {
         subtotal: cartSubtotal,
         shipping: shipping,
-        tax: tax,
         total: total
       },
       status: 'pending'
     };
 
     try {
-      await addDoc(collection(db, 'orders'), orderData);
-      
+      const docRef = await addDoc(collection(db, 'orders'), orderData);
+      const placedOrder = { ...orderData, id: docRef.id };
       clearCart();
-      alert('try again');
-      navigate('/');
+      setOrderSuccess(placedOrder);
+      setIsProcessing(false);
     } catch (error) {
       console.error("Error placing order:", error);
-      alert('There was an error placing your order. Please try again.');
+      alert('There was an issue submitting your order. Please check your network connection and try again, or contact us directly on WhatsApp.');
       setIsProcessing(false);
     }
   };
 
+  // If order was successfully submitted, display confirmation screen
+  if (orderSuccess) {
+    return (
+      <div className="container py-xxl" style={{ maxWidth: '750px', margin: '0 auto', textAlign: 'center' }}>
+        <Helmet>
+          <title>Order Placed Successfully | Taicon Store</title>
+        </Helmet>
+        
+        <div className="bg-secondary p-xl" style={{ borderRadius: '16px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
+          <div style={{ display: 'inline-flex', padding: '16px', borderRadius: '50%', backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#16a34a', marginBottom: '1.5rem' }}>
+            <CheckCircle2 size={56} />
+          </div>
+          
+          <h1 className="text-3xl font-bold mb-xs" style={{ color: '#16a34a' }}>Thank You! Order Confirmed</h1>
+          <p className="text-muted text-lg mb-lg">Your order has been placed with <strong>Cash on Delivery (COD)</strong>.</p>
+          
+          <div className="bg-primary p-md mb-lg" style={{ borderRadius: '10px', textAlign: 'left', border: '1px solid var(--border-color)' }}>
+            <div className="flex justify-between items-center mb-sm pb-sm" style={{ borderBottom: '1px solid var(--border-color)' }}>
+              <div>
+                <span className="text-xs text-muted block">Order Tracking Number</span>
+                <span className="font-bold text-lg" style={{ color: '#ea580c' }}>{orderSuccess.orderNumber}</span>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <span className="text-xs text-muted block">Payment Method</span>
+                <span className="font-bold text-sm" style={{ color: '#16a34a' }}>Cash on Delivery</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-md text-sm mb-md">
+              <div>
+                <p className="font-bold mb-xs">Customer Details:</p>
+                <p>{orderSuccess.shipping.fullName}</p>
+                <p>Phone: {orderSuccess.contact.phone}</p>
+                {orderSuccess.contact.email && <p>Email: {orderSuccess.contact.email}</p>}
+              </div>
+              <div>
+                <p className="font-bold mb-xs">Delivery Address:</p>
+                <p>{orderSuccess.shipping.address}</p>
+                <p>{orderSuccess.shipping.city}, {orderSuccess.shipping.province}</p>
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px dashed var(--border-color)', paddingTop: '0.75rem' }}>
+              <div className="flex justify-between font-bold text-base">
+                <span>Total Amount to Pay on Delivery:</span>
+                <span style={{ color: '#ea580c' }}>{currencySymbol}{orderSuccess.summary.total.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-sm text-muted mb-xl">
+            Our representative will call your number (<strong>{orderSuccess.contact.phone}</strong>) before dispatching to verify your address.
+          </p>
+
+          <div className="flex justify-center gap-md flex-wrap">
+            <Link to="/" className="btn btn-primary" style={{ padding: '0.75rem 2rem' }}>
+              Return to Home
+            </Link>
+            <Link to="/shop" className="btn btn-outline" style={{ padding: '0.75rem 2rem' }}>
+              Continue Shopping
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container py-xl">
       <Helmet>
-        <title>Secure Checkout | IEE Store</title>
-        <meta name="description" content="Secure checkout at IEE Store." />
+        <title>Cash on Delivery Checkout | Taicon Store</title>
+        <meta name="description" content="Safe and easy Cash on Delivery Checkout at Taicon Store." />
       </Helmet>
-      <div className="flex justify-center items-center mb-xl gap-sm text-success-color">
-        <Lock size={20} />
-        <h1 className="text-2xl font-bold">Secure Checkout</h1>
+
+      <div className="mb-lg">
+        <Link to="/cart" className="text-muted hover-text flex items-center gap-xs font-medium text-sm">
+          <ArrowLeft size={16} /> Back to Cart
+        </Link>
+      </div>
+
+      <div className="flex justify-between items-center mb-xl flex-wrap gap-sm">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center gap-sm">
+            <Truck size={30} style={{ color: '#ea580c' }} /> Cash on Delivery Checkout
+          </h1>
+          <p className="text-muted text-sm mt-xs">Pay in cash when your parcel is delivered at your doorstep across Pakistan.</p>
+        </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-xl" style={{ alignItems: 'flex-start' }}>
         
-        {/* Form */}
-        <div style={{ flex: '1 1 60%' }}>
-          <form id="checkout-form" onSubmit={handleSubmit}>
+        {/* Delivery Form */}
+        <div style={{ flex: '1 1 60%', width: '100%' }}>
+          <form id="cod-checkout-form" onSubmit={handleSubmit}>
             
-            {/* Contact Info */}
-            <div className="mb-xl bg-secondary" style={{ padding: '2rem', borderRadius: 'var(--border-radius)' }}>
-              <h2 className="text-xl font-bold mb-md">Contact Information</h2>
-              <div className="grid grid-cols-2 gap-md">
-                <div className="col-span-2">
-                  <label className="text-sm font-medium mb-xs block">Email Address *</label>
-                  <input type="email" name="email" required className="input" placeholder="Email" />
-                </div>
-                <div className="col-span-2">
-                  <label className="text-sm font-medium mb-xs block">Phone Number *</label>
-                  <input type="tel" name="phone" required className="input" placeholder="Phone" />
-                </div>
-              </div>
-            </div>
-
-            {/* Shipping Info */}
-            <div className="mb-xl bg-secondary" style={{ padding: '2rem', borderRadius: 'var(--border-radius)' }}>
-              <h2 className="text-xl font-bold mb-md">Shipping Address</h2>
-              <div className="grid grid-cols-2 gap-md">
-                <div>
-                  <label className="text-sm font-medium mb-xs block">First Name *</label>
-                  <input type="text" name="firstName" required className="input" placeholder="First Name" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-xs block">Last Name *</label>
-                  <input type="text" name="lastName" required className="input" placeholder="Last Name" />
-                </div>
-                <div className="col-span-2">
-                  <label className="text-sm font-medium mb-xs block">Address *</label>
-                  <input type="text" name="address" required className="input" placeholder="Street Address" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-xs block">City *</label>
-                  <input type="text" name="city" required className="input" placeholder="City" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-xs block">Country *</label>
-                  <select 
-                    name="country" 
+            {/* Delivery Contact Info */}
+            <div className="mb-xl bg-secondary" style={{ padding: '1.75rem', borderRadius: 'var(--border-radius)', border: '1px solid var(--border-color)' }}>
+              <h2 className="text-xl font-bold mb-md flex items-center gap-xs">
+                <MapPin size={20} style={{ color: '#ea580c' }} /> Delivery & Contact Information
+              </h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+                <div className="md:col-span-2">
+                  <label className="text-sm font-semibold mb-xs block">Full Name *</label>
+                  <input 
+                    type="text" 
+                    name="fullName" 
                     required 
                     className="input" 
-                    value={selectedCountry}
-                    onChange={(e) => setSelectedCountry(e.target.value)}
-                  >
-                    <option value="United States">United States</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="Thailand">Thailand</option>
-                  </select>
+                    placeholder="Enter recipient full name"
+                    value={shippingInfo.fullName}
+                    onChange={handleChange}
+                  />
                 </div>
+
                 <div>
-                  <label className="text-sm font-medium mb-xs block">State *</label>
-                  <select name="state" required className="input">
-                    <option value="">Select State</option>
-                    {countryStates[selectedCountry]?.map((state, idx) => (
-                      <option key={idx} value={state}>{state}</option>
+                  <label className="text-sm font-semibold mb-xs block">Phone Number (For Delivery Call) *</label>
+                  <input 
+                    type="tel" 
+                    name="phone" 
+                    required 
+                    className="input" 
+                    placeholder="e.g. 0300 1234567" 
+                    value={shippingInfo.phone}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-semibold mb-xs block">WhatsApp / Alternate Phone (Optional)</label>
+                  <input 
+                    type="tel" 
+                    name="altPhone" 
+                    className="input" 
+                    placeholder="e.g. 0321 9876543" 
+                    value={shippingInfo.altPhone}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="text-sm font-semibold mb-xs block">Email Address (Optional, for invoice copy)</label>
+                  <input 
+                    type="email" 
+                    name="email" 
+                    className="input" 
+                    placeholder="email@example.com" 
+                    value={shippingInfo.email}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="text-sm font-semibold mb-xs block">Complete Street Address (House/Shop/Plaza/Floor) *</label>
+                  <textarea 
+                    name="address" 
+                    required 
+                    rows={3} 
+                    className="input" 
+                    placeholder="House / Flat / Shop Number, Street Name, Sector or Area"
+                    value={shippingInfo.address}
+                    onChange={handleChange}
+                    style={{ resize: 'vertical' }}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-semibold mb-xs block">City *</label>
+                  <select 
+                    name="city" 
+                    required 
+                    className="input" 
+                    value={shippingInfo.city}
+                    onChange={handleChange}
+                  >
+                    {pakistaniCities.map((city) => (
+                      <option key={city} value={city}>{city}</option>
                     ))}
                   </select>
                 </div>
+
                 <div>
-                  <label className="text-sm font-medium mb-xs block">ZIP Code *</label>
-                  <input type="text" name="zip" required className="input" placeholder="ZIP" />
+                  <label className="text-sm font-semibold mb-xs block">Province *</label>
+                  <select 
+                    name="province" 
+                    required 
+                    className="input" 
+                    value={shippingInfo.province}
+                    onChange={handleChange}
+                  >
+                    {provinces.map((prov) => (
+                      <option key={prov} value={prov}>{prov}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="text-sm font-semibold mb-xs block">Delivery Notes / Landmark (Optional)</label>
+                  <input 
+                    type="text" 
+                    name="notes" 
+                    className="input" 
+                    placeholder="Nearby landmark, delivery timing preference, etc." 
+                    value={shippingInfo.notes}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Payment Info */}
-            <div className="mb-xl bg-secondary" style={{ padding: '2rem', borderRadius: 'var(--border-radius)' }}>
-              <h2 className="text-xl font-bold mb-md">Payment</h2>
-              <div className="grid grid-cols-2 gap-md">
-                <div className="col-span-2">
-                  <label className="text-sm font-medium mb-xs block">Card Name *</label>
-                  <input type="text" name="funCardName" required className="input" placeholder="Name on Card" />
-                </div>
-                <div className="col-span-2">
-                  <label className="text-sm font-medium mb-xs block">Card Number *</label>
-                  <div style={{ position: 'relative' }}>
-                    <input 
-                      type="text" 
-                      name="funCardNumber" 
-                      required 
-                      className="input" 
-                      placeholder="0000 0000 0000 0000" 
-                      value={cardNumber} 
-                      onChange={handleCardNumberChange} 
-                      style={{ paddingRight: '2.5rem' }}
-                    />
-                    <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}>
-                      {cardType === 'Visa' && <VisaLogo />}
-                      {cardType === 'Mastercard' && <MastercardLogo />}
-                      {cardType === 'Amex' && <AmexLogo />}
-                      {cardType === 'Discover' && <DiscoverLogo />}
-                    </div>
+            {/* Payment Method Section - Cash on Delivery */}
+            <div className="mb-xl bg-secondary" style={{ padding: '1.75rem', borderRadius: 'var(--border-radius)', border: '1px solid var(--border-color)' }}>
+              <h2 className="text-xl font-bold mb-md">Payment Method</h2>
+              
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '14px', 
+                  padding: '1.25rem', 
+                  backgroundColor: 'rgba(234, 88, 12, 0.08)', 
+                  border: '2px solid #ea580c', 
+                  borderRadius: '10px' 
+                }}
+              >
+                <div style={{ width: '22px', height: '22px', borderRadius: '50%', border: '6px solid #ea580c', backgroundColor: 'white' }}></div>
+                <div style={{ flex: 1 }}>
+                  <div className="flex items-center gap-xs">
+                    <span className="font-bold text-base">Cash on Delivery (COD)</span>
+                    <span style={{ backgroundColor: '#16a34a', color: 'white', fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px' }}>VERIFIED</span>
                   </div>
+                  <p className="text-sm text-muted mt-xs" style={{ margin: '4px 0 0 0' }}>
+                    Pay in cash when you receive the package at your address. No advance card payment needed!
+                  </p>
                 </div>
-                <div>
-                  <label className="text-sm font-medium mb-xs block">Expiry Date (MM/YY) *</label>
-                  <input type="text" name="dobMonthYear" required className="input" placeholder="MM/YY" value={dob} onChange={handleDobChange} />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-xs block">CVC *</label>
-                  <input type="text" name="fav3Numbers" required className="input" placeholder="123" maxLength="3" />
-                </div>
+              </div>
+
+              <div className="mt-md flex items-center gap-xs text-xs text-muted">
+                <ShieldCheck size={16} style={{ color: '#16a34a' }} />
+                <span>100% Safe & Secure shopping with inspection on delivery</span>
               </div>
             </div>
             
           </form>
         </div>
 
-        {/* Order Summary */}
-        <div style={{ flex: '1 1 40%', border: '1px solid var(--border-color)', padding: '2rem', borderRadius: 'var(--border-radius)', position: 'sticky', top: '100px' }}>
-          <h2 className="text-xl font-bold mb-lg">Order Summary</h2>
-          
-          <div className="mb-lg" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-            {cart.map((item, index) => (
-              <div key={index} className="flex items-center gap-md mb-md">
-                <div style={{ position: 'relative' }}>
-                  <img src={item.product.image} alt={item.product.name} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} />
-                  <span style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: 'var(--text-primary)', color: 'white', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>
-                    {item.quantity}
-                  </span>
+        {/* Order Summary Sidebar */}
+        <div style={{ flex: '1 1 40%', width: '100%', position: 'sticky', top: '100px' }}>
+          <div className="bg-secondary" style={{ padding: '1.75rem', borderRadius: 'var(--border-radius)', border: '1px solid var(--border-color)' }}>
+            <h2 className="text-xl font-bold mb-md flex items-center gap-xs">
+              <ShoppingBag size={20} /> Order Summary ({cart.length} items)
+            </h2>
+            
+            <div className="mb-lg" style={{ maxHeight: '280px', overflowY: 'auto' }}>
+              {cart.map((item, index) => (
+                <div key={index} className="flex items-center gap-md mb-md pb-sm" style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <div style={{ position: 'relative' }}>
+                    <img 
+                      src={item.product.image} 
+                      alt={item.product.name} 
+                      style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '6px', backgroundColor: 'white' }} 
+                    />
+                    <span style={{ 
+                      position: 'absolute', 
+                      top: '-6px', 
+                      right: '-6px', 
+                      backgroundColor: '#ea580c', 
+                      color: 'white', 
+                      borderRadius: '50%', 
+                      width: '20px', 
+                      height: '20px', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      fontSize: '0.75rem', 
+                      fontWeight: 700 
+                    }}>
+                      {item.quantity}
+                    </span>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p className="font-semibold text-sm" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {item.product.name}
+                    </p>
+                    <p className="text-xs text-muted">{currencySymbol}{item.product.price.toLocaleString()} each</p>
+                  </div>
+                  <div className="font-bold text-sm">
+                    {currencySymbol}{(item.product.price * item.quantity).toLocaleString()}
+                  </div>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <p className="font-medium text-sm">{item.product.name}</p>
-                  {item.variation && <p className="text-xs text-muted">{Object.values(item.variation).join(', ')}</p>}
-                </div>
-                <div className="font-medium">
-                  {currencySymbol}{(item.product.price * item.quantity).toFixed(2)}
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="flex justify-between mb-sm pt-md" style={{ borderTop: '1px solid var(--border-color)' }}>
-            <span className="text-muted">Subtotal</span>
-            <span className="font-medium">{currencySymbol}{cartSubtotal.toFixed(2)}</span>
-          </div>
-          
-          <div className="flex justify-between mb-sm">
-            <span className="text-muted">Shipping</span>
-            <span className="font-medium">{shipping === 0 ? 'Free' : `${currencySymbol}${shipping.toFixed(2)}`}</span>
-          </div>
-          
-          <div className="flex justify-between mb-lg pb-lg" style={{ borderBottom: '1px solid var(--border-color)' }}>
-            <span className="text-muted">Taxes</span>
-            <span className="font-medium">{currencySymbol}{tax.toFixed(2)}</span>
-          </div>
+              ))}
+            </div>
+            
+            <div className="flex justify-between mb-xs text-sm">
+              <span className="text-muted">Subtotal</span>
+              <span className="font-semibold">{currencySymbol}{cartSubtotal.toLocaleString()}</span>
+            </div>
+            
+            <div className="flex justify-between mb-sm text-sm">
+              <span className="text-muted">Delivery Charges</span>
+              <span className="font-semibold" style={{ color: shipping === 0 ? '#16a34a' : 'inherit' }}>
+                {shipping === 0 ? 'FREE Shipping' : `${currencySymbol}${shipping.toLocaleString()}`}
+              </span>
+            </div>
+            
+            <div className="flex justify-between items-center mb-xl pt-md text-xl font-bold" style={{ borderTop: '2px dashed var(--border-color)' }}>
+              <span>Total Payable</span>
+              <span style={{ color: '#ea580c' }}>{currencySymbol}{total.toLocaleString()}</span>
+            </div>
 
-          <div className="flex justify-between mb-xl text-xl font-bold">
-            <span>Total</span>
-            <span>{currencySymbol}{total.toFixed(2)}</span>
+            <button 
+              type="submit" 
+              form="cod-checkout-form"
+              className="btn btn-primary btn-full text-base py-md flex items-center justify-center gap-sm font-bold" 
+              disabled={isProcessing}
+              style={{ backgroundColor: '#ea580c', borderColor: '#ea580c' }}
+            >
+              {isProcessing ? 'Placing Order...' : `Confirm Order (Cash on Delivery)`}
+            </button>
+            
+            <p className="text-xs text-center text-muted mt-md">
+              By confirming, your order will be booked and dispatched via courier with cash on delivery.
+            </p>
           </div>
-
-          <button 
-            type="submit" 
-            form="checkout-form"
-            className="btn btn-primary btn-full text-lg py-md flex items-center justify-center gap-sm" 
-            disabled={isProcessing}
-          >
-            {isProcessing ? 'Processing...' : `Pay ${currencySymbol}${total.toFixed(2)}`} <Lock size={18} />
-          </button>
         </div>
 
       </div>
       <style dangerouslySetInnerHTML={{__html: `
         @media (min-width: 768px) {
           .md\\:flex-row { flex-direction: row; }
+          .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .md\\:col-span-2 { grid-column: span 2 / span 2; }
         }
       `}} />
     </div>

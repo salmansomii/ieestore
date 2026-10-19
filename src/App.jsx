@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
+import ChatSupport from './components/ChatSupport';
 
 // Lazy loading pages
 const Home = lazy(() => import('./pages/Home'));
@@ -37,6 +38,8 @@ function App() {
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/order" element={<Admin />} />
+                <Route path="/orders" element={<Admin />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/account" element={<Account />} />
                 
@@ -55,6 +58,7 @@ function App() {
             </Suspense>
           </main>
           <Footer />
+          <ChatSupport />
         </div>
       </ErrorBoundary>
     </Router>

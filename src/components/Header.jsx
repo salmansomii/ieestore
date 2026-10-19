@@ -21,11 +21,10 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: 'Shop All', path: '/shop' },
-    { name: 'Baby', path: '/shop/Baby' },
-    { name: 'Christmas', path: '/shop/Christmas' },
-    { name: 'Home Product', path: '/shop/Home Product' },
-    { name: 'Fashion', path: '/shop/Fashion' },
+    { name: 'Home', path: '/' },
+    { name: 'Solar System', path: '/shop/Solar System' },
+    { name: 'Home Products', path: '/shop/Home Product' },
+    { name: 'All Products', path: '/shop' },
   ];
 
   return (
@@ -44,22 +43,31 @@ const Header = () => {
           className="md:hidden" 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle menu"
-          style={{ padding: '8px' }}
+          style={{ padding: '8px', background: 'transparent', border: 'none', cursor: 'pointer' }}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         {/* Logo */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
-          <img src="/iee-logo-transparent.png" alt="IEE Logo" style={{ height: '60px' }} />
+          <img 
+            src="/taicon-logo.png" 
+            alt="Taicon Store" 
+            style={{ height: '54px', width: 'auto', objectFit: 'contain' }} 
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'block';
+            }}
+          />
+          <span style={{ display: 'none', fontSize: '1.5rem', fontWeight: 800, color: '#ea580c' }}>TAICON</span>
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:block" style={{ display: 'none' }} >
-          <ul style={{ display: 'flex', gap: '2rem' }}>
+          <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none', margin: 0, padding: 0 }}>
             {navLinks.map((link) => (
               <li key={link.name}>
-                <Link to={link.path} style={{ fontWeight: 500, fontSize: '0.95rem' }} className="nav-link">
+                <Link to={link.path} style={{ fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none' }} className="nav-link">
                   {link.name}
                 </Link>
               </li>
@@ -82,18 +90,16 @@ const Header = () => {
                 border: '1px solid var(--border-color)',
                 fontSize: '0.875rem',
                 outline: 'none',
-                width: '200px'
+                width: '210px'
               }}
             />
-            <button type="submit" style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}>
+            <button type="submit" style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}>
               <Search size={18} />
             </button>
           </form>
 
-
-
           {isAdmin && (
-            <Link to="/admin" style={{ color: 'var(--text-primary)' }} className="hidden md:block" title="Admin Dashboard">
+            <Link to="/order" style={{ color: '#ea580c' }} className="hidden md:block" title="Admin Orders">
               <Shield size={24} />
             </Link>
           )}
@@ -105,7 +111,7 @@ const Header = () => {
                 position: 'absolute',
                 top: '-5px',
                 right: '-5px',
-                backgroundColor: 'var(--danger-color)',
+                backgroundColor: '#ea580c',
                 color: 'white',
                 fontSize: '0.75rem',
                 fontWeight: 700,
@@ -133,7 +139,8 @@ const Header = () => {
           backgroundColor: 'var(--bg-primary)',
           borderBottom: '1px solid var(--border-color)',
           padding: '1rem var(--spacing-md)',
-          boxShadow: 'var(--shadow-md)'
+          boxShadow: 'var(--shadow-md)',
+          zIndex: 100
         }}>
           <form onSubmit={handleSearch} style={{ position: 'relative', marginBottom: '1rem' }}>
             <input 
@@ -144,22 +151,33 @@ const Header = () => {
               className="input"
               style={{ paddingRight: '2.5rem' }}
             />
-            <button type="submit" style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}>
+            <button type="submit" style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-secondary)' }}>
               <Search size={20} />
             </button>
           </form>
-          <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', listStyle: 'none', padding: 0, margin: 0 }}>
             {navLinks.map((link) => (
               <li key={link.name}>
                 <Link 
                   to={link.path} 
-                  style={{ display: 'block', fontSize: '1.1rem', fontWeight: 500, padding: '0.5rem 0' }}
+                  style={{ display: 'block', fontSize: '1.05rem', fontWeight: 600, padding: '0.5rem 0', textDecoration: 'none' }}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
                 </Link>
               </li>
             ))}
+            {isAdmin && (
+              <li>
+                <Link 
+                  to="/order" 
+                  style={{ display: 'block', fontSize: '1.05rem', fontWeight: 600, padding: '0.5rem 0', color: '#ea580c', textDecoration: 'none' }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Admin Orders Dashboard
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       )}
@@ -169,7 +187,7 @@ const Header = () => {
           .md\\:block { display: block !important; }
           .md\\:hidden { display: none !important; }
         }
-        .nav-link:hover { color: var(--text-secondary); }
+        .nav-link:hover { color: #ea580c; }
       `}} />
     </header>
   );

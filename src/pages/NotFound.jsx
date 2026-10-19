@@ -6,7 +6,7 @@ const NotFound = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center">
       <Helmet>
-        <title>404 - Page Not Found | IEE Store</title>
+        <title>404 - Page Not Found | Taicon Store</title>
         <meta name="description" content="The page you are looking for does not exist." />
       </Helmet>
       <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
