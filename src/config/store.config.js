@@ -20,11 +20,4 @@ export const storeConfig = {
     taxRate: 0,
   },
   customCheckoutUrl: "", 
-  
-  // Free EmailJS credentials for automatic order confirmation emails to customer
-  emailConfig: {
-    serviceId: "service_taicon",
-    templateId: "template_taicon",
-    publicKey: "user_taicon_key"
-  }
 };
