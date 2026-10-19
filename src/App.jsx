@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import BottomNav from './components/BottomNav';
+import ScrollToTop from './components/ScrollToTop';
 import ErrorBoundary from './components/ErrorBoundary';
 import ChatSupport from './components/ChatSupport';
 
@@ -16,20 +18,29 @@ const Admin = lazy(() => import('./pages/Admin'));
 const Account = lazy(() => import('./pages/Account'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// Simple loading fallback
+// Fast loading spinner fallback
 const PageLoader = () => (
-  <div className="flex justify-center items-center min-h-[50vh]">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+  <div className="flex justify-center items-center min-h-[50vh] py-xxl">
+    <div style={{
+      width: '36px',
+      height: '36px',
+      border: '3px solid #e2e8f0',
+      borderTopColor: '#ea580c',
+      borderRadius: '50%',
+      animation: 'appSpin 0.75s linear infinite'
+    }}></div>
+    <style dangerouslySetInnerHTML={{__html: `@keyframes appSpin { to { transform: rotate(360deg); } }`}} />
   </div>
 );
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <ErrorBoundary>
-        <div className="flex flex-col h-full min-h-screen">
+        <div className="flex flex-col min-h-screen" style={{ position: 'relative', overflowX: 'hidden' }}>
           <Header />
-          <main className="flex-1">
+          <main className="flex-1" style={{ width: '100%' }}>
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -58,6 +69,7 @@ function App() {
             </Suspense>
           </main>
           <Footer />
+          <BottomNav />
           <ChatSupport />
         </div>
       </ErrorBoundary>

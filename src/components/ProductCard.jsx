@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { storeConfig } from '../config/store.config';
+import { Plus } from 'lucide-react';
 
 const ProductCard = ({ product, priority = false }) => {
   const { addToCart } = useCart();
@@ -8,6 +9,7 @@ const ProductCard = ({ product, priority = false }) => {
 
   const handleQuickAdd = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     const defaultVariation = product.variations && product.variations.length > 0 
       ? { [product.variations[0].name]: product.variations[0].options ? product.variations[0].options[0] : product.variations[0].name } 
       : null;
@@ -15,39 +17,78 @@ const ProductCard = ({ product, priority = false }) => {
   };
 
   return (
-    <Link to={`/product/${product.id}`} className="product-card" style={{ display: 'flex', flexDirection: 'column', height: '100%', textDecoration: 'none', color: 'inherit' }}>
-      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', marginBottom: '1rem', aspectRatio: '1/1', backgroundColor: '#ffffff', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px' }}>
+    <Link 
+      to={`/product/${product.id}`} 
+      className="product-card"
+    >
+      <div className="product-image-box">
         <img 
           src={product.image} 
           alt={product.name} 
           loading={priority ? "eager" : "lazy"}
           fetchpriority={priority ? "high" : "auto"}
-          width="400"
-          height="400"
-          className="w-full h-full object-contain"
-          style={{ transition: 'transform 0.3s ease', maxHeight: '100%' }}
-          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          decoding="async"
+          width="320"
+          height="320"
         />
         {product.discountPercentage > 0 && (
-          <div style={{ position: 'absolute', top: '10px', left: '10px', backgroundColor: '#ea580c', color: 'white', padding: '3px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700 }}>
-            Save {product.discountPercentage}%
+          <div 
+            style={{ 
+              position: 'absolute', 
+              top: '6px', 
+              left: '6px', 
+              backgroundColor: '#ea580c', 
+              color: 'white', 
+              padding: '2px 6px', 
+              borderRadius: '4px', 
+              fontSize: '0.675rem', 
+              fontWeight: 700 
+            }}
+          >
+            -{product.discountPercentage}%
           </div>
         )}
       </div>
       
-      <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <p className="text-xs font-bold text-muted mb-xs" style={{ textTransform: 'uppercase', letterSpacing: '0.05em', color: '#ea580c' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+        <p 
+          style={{ 
+            fontSize: '0.7rem', 
+            fontWeight: 700, 
+            textTransform: 'uppercase', 
+            letterSpacing: '0.04em', 
+            color: '#ea580c',
+            marginBottom: '4px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}
+        >
           {product.category}
         </p>
-        <h3 className="font-semibold mb-sm" style={{ fontSize: '1rem', lineHeight: 1.4 }}>
+
+        <h3 
+          style={{ 
+            fontSize: '0.875rem', 
+            fontWeight: 600, 
+            lineHeight: 1.35,
+            marginBottom: '6px',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            minHeight: '2.4em'
+          }}
+        >
           {product.name}
         </h3>
         
-        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-          <span className="font-bold text-lg" style={{ color: '#ea580c' }}>{currencySymbol}{product.price.toLocaleString()}</span>
+        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'baseline', gap: '0.35rem', marginBottom: '8px', flexWrap: 'wrap' }}>
+          <span style={{ fontWeight: 800, fontSize: '1rem', color: '#ea580c' }}>
+            {currencySymbol}{product.price.toLocaleString()}
+          </span>
           {product.compareAtPrice && (
-            <span className="text-muted" style={{ textDecoration: 'line-through', fontSize: '0.85rem' }}>
+            <span style={{ color: 'var(--text-secondary)', textDecoration: 'line-through', fontSize: '0.75rem' }}>
               {currencySymbol}{product.compareAtPrice.toLocaleString()}
             </span>
           )}
@@ -55,21 +96,18 @@ const ProductCard = ({ product, priority = false }) => {
 
         <button 
           onClick={handleQuickAdd}
-          className="btn btn-outline btn-full text-sm font-semibold"
-          style={{ padding: '0.5rem' }}
+          className="btn btn-outline btn-full text-xs"
+          style={{ 
+            padding: '0.45rem 0.5rem', 
+            minHeight: '36px',
+            fontSize: '0.8rem',
+            borderRadius: '6px'
+          }}
+          aria-label={`Add ${product.name} to cart`}
         >
-          Add to Cart
+          <Plus size={14} /> Add to Cart
         </button>
       </div>
-
-      <style dangerouslySetInnerHTML={{__html: `
-        .product-card {
-          transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .product-card:hover {
-          transform: translateY(-2px);
-        }
-      `}} />
     </Link>
   );
 };

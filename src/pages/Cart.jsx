@@ -18,21 +18,21 @@ const Cart = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="container py-xxl text-center" style={{ maxWidth: '600px', margin: '3rem auto' }}>
+      <div className="container py-xxl text-center" style={{ maxWidth: '550px', margin: '2rem auto' }}>
         <Helmet>
           <title>Shopping Cart | Taicon Store</title>
         </Helmet>
-        <div style={{ display: 'inline-flex', padding: '20px', borderRadius: '50%', backgroundColor: 'var(--bg-secondary)', marginBottom: '1.5rem', color: '#ea580c' }}>
-          <ShoppingBag size={48} />
+        <div style={{ display: 'inline-flex', padding: '18px', borderRadius: '50%', backgroundColor: 'var(--bg-secondary)', marginBottom: '1.25rem', color: '#ea580c' }}>
+          <ShoppingBag size={42} />
         </div>
-        <h1 className="text-3xl mb-md font-bold">Your Cart is Empty</h1>
-        <p className="text-muted mb-xl">Explore our high-efficiency Solar Systems and smart Home Products.</p>
-        <div className="flex justify-center gap-md flex-wrap">
-          <Link to="/shop/Solar System" className="btn btn-primary" style={{ padding: '0.75rem 1.75rem' }}>
-            Browse Solar Systems
+        <h1 className="text-2xl mb-xs font-bold">Your Cart is Empty</h1>
+        <p className="text-muted text-sm mb-lg">Explore our high-efficiency Solar Systems and smart Home Products.</p>
+        <div className="flex justify-center gap-sm flex-wrap">
+          <Link to="/shop/Solar System" className="btn btn-primary text-xs" style={{ padding: '0.65rem 1.5rem' }}>
+            Browse Solar
           </Link>
-          <Link to="/shop/Home Product" className="btn btn-outline" style={{ padding: '0.75rem 1.75rem' }}>
-            Browse Home Products
+          <Link to="/shop/Home Product" className="btn btn-outline text-xs" style={{ padding: '0.65rem 1.5rem' }}>
+            Browse Appliances
           </Link>
         </div>
       </div>
@@ -40,82 +40,95 @@ const Cart = () => {
   }
 
   return (
-    <div className="container py-xl">
+    <div className="container py-lg">
       <Helmet>
         <title>Shopping Cart | Taicon Store</title>
         <meta name="description" content="View items in your Taicon Store cart with Cash on Delivery across Pakistan." />
       </Helmet>
       
-      <div className="flex justify-between items-center mb-xl flex-wrap gap-sm">
-        <h1 className="text-3xl font-bold flex items-center gap-sm">
-          <ShoppingBag size={28} style={{ color: '#ea580c' }} /> Shopping Cart
+      <div className="flex justify-between items-center mb-md flex-wrap gap-xs">
+        <h1 className="text-2xl font-bold flex items-center gap-xs">
+          <ShoppingBag size={24} style={{ color: '#ea580c' }} /> Shopping Cart
         </h1>
-        <span className="text-muted text-sm">{cart.length} item{cart.length > 1 ? 's' : ''} in cart</span>
+        <span className="text-muted text-xs font-semibold">{cart.length} item{cart.length > 1 ? 's' : ''} in cart</span>
       </div>
       
-      <div className="flex flex-col md:flex-row gap-xl" style={{ alignItems: 'flex-start' }}>
+      <div className="flex flex-col md:flex-row gap-lg" style={{ alignItems: 'flex-start' }}>
         
         {/* Cart Items List */}
         <div style={{ flex: '1 1 65%', width: '100%' }}>
-          <div style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem', marginBottom: '1rem' }} className="hidden md:flex justify-between text-muted text-xs font-bold uppercase">
-            <span style={{ flex: '2' }}>Product</span>
-            <span style={{ flex: '1', textAlign: 'center' }}>Quantity</span>
-            <span style={{ flex: '1', textAlign: 'right' }}>Total</span>
-          </div>
-
           {cart.map((item, index) => (
-            <div key={index} className="flex flex-col md:flex-row items-center justify-between gap-md py-md" style={{ borderBottom: '1px solid var(--border-color)' }}>
-              
-              <div className="flex items-center gap-md" style={{ flex: '2', width: '100%' }}>
+            <div 
+              key={index} 
+              style={{ 
+                border: '1px solid var(--border-color)', 
+                borderRadius: '12px',
+                padding: '0.875rem',
+                marginBottom: '0.75rem',
+                backgroundColor: '#ffffff'
+              }}
+            >
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                 <img 
                   src={item.product.image} 
                   alt={item.product.name} 
-                  style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid var(--border-color)', backgroundColor: 'white' }} 
+                  style={{ width: '70px', height: '70px', objectFit: 'contain', borderRadius: '8px', border: '1px solid var(--border-color)', flexShrink: 0, padding: '4px' }} 
                 />
-                <div style={{ flex: 1 }}>
-                  <Link to={`/product/${item.product.id}`} className="font-bold text-base hover-text" style={{ textDecoration: 'none' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <Link 
+                    to={`/product/${item.product.id}`} 
+                    style={{ fontWeight: 600, fontSize: '0.875rem', display: 'block', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} 
+                    className="hover-text"
+                  >
                     {item.product.name}
                   </Link>
-                  <div className="text-sm font-semibold mt-xs" style={{ color: '#ea580c' }}>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#ea580c', marginTop: '2px' }}>
                     {currencySymbol}{item.product.price.toLocaleString()}
                   </div>
                   {item.variation && (
-                    <div className="text-xs text-muted mt-xs">
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
                       {Object.entries(item.variation).map(([k, v]) => `${k}: ${v}`).join(', ')}
                     </div>
                   )}
-                  <button 
-                    onClick={() => removeFromCart(item.product.id, item.variation)}
-                    className="text-danger-color text-xs mt-sm flex items-center gap-xs"
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                  >
-                    <Trash2 size={13} /> Remove item
-                  </button>
                 </div>
+
+                <button 
+                  onClick={() => removeFromCart(item.product.id, item.variation)}
+                  style={{ color: '#ef4444', padding: '6px', cursor: 'pointer', background: 'none', border: 'none' }}
+                  aria-label="Remove item"
+                  title="Remove item"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
 
-              <div style={{ flex: '1', display: 'flex', justifyContent: 'center', width: '100%' }}>
+              {/* Stepper & Line Total Row */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.75rem', paddingTop: '0.5rem', borderTop: '1px dashed var(--border-color)' }}>
+                {/* Stepper */}
                 <div className="flex items-center" style={{ border: '1px solid var(--border-color)', borderRadius: '6px', overflow: 'hidden' }}>
                   <button 
                     className="btn" 
-                    style={{ padding: '0.4rem 0.75rem', borderRadius: 0, backgroundColor: 'var(--bg-secondary)' }} 
+                    style={{ padding: '0.25rem 0.65rem', minHeight: '32px', borderRadius: 0, backgroundColor: 'var(--bg-secondary)', fontSize: '0.9rem' }} 
                     onClick={() => updateQuantity(item.product.id, item.variation, item.quantity - 1)}
+                    aria-label="Decrease quantity"
                   >
                     -
                   </button>
-                  <span style={{ width: '40px', textAlign: 'center', fontWeight: 600 }}>{item.quantity}</span>
+                  <span style={{ width: '36px', textAlign: 'center', fontWeight: 700, fontSize: '0.85rem' }}>{item.quantity}</span>
                   <button 
                     className="btn" 
-                    style={{ padding: '0.4rem 0.75rem', borderRadius: 0, backgroundColor: 'var(--bg-secondary)' }} 
+                    style={{ padding: '0.25rem 0.65rem', minHeight: '32px', borderRadius: 0, backgroundColor: 'var(--bg-secondary)', fontSize: '0.9rem' }} 
                     onClick={() => updateQuantity(item.product.id, item.variation, item.quantity + 1)}
+                    aria-label="Increase quantity"
                   >
                     +
                   </button>
                 </div>
-              </div>
 
-              <div style={{ flex: '1', textAlign: 'right', width: '100%' }} className="font-bold text-lg">
-                {currencySymbol}{(item.product.price * item.quantity).toLocaleString()}
+                {/* Subtotal */}
+                <div style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--text-primary)' }}>
+                  Total: <span style={{ color: '#ea580c' }}>{currencySymbol}{(item.product.price * item.quantity).toLocaleString()}</span>
+                </div>
               </div>
 
             </div>
@@ -123,15 +136,15 @@ const Cart = () => {
         </div>
 
         {/* Order Summary */}
-        <div style={{ flex: '1 1 35%', width: '100%', backgroundColor: 'var(--bg-secondary)', padding: '1.75rem', borderRadius: 'var(--border-radius)', border: '1px solid var(--border-color)', position: 'sticky', top: '100px' }}>
-          <h2 className="text-xl font-bold mb-lg">Order Summary</h2>
+        <div style={{ flex: '1 1 35%', width: '100%', backgroundColor: 'var(--bg-secondary)', padding: '1.25rem', borderRadius: 'var(--border-radius)', border: '1px solid var(--border-color)', position: 'sticky', top: '80px' }}>
+          <h2 className="text-lg font-bold mb-md">Order Summary</h2>
           
-          <div className="flex justify-between mb-sm text-sm">
+          <div className="flex justify-between mb-xs text-xs">
             <span className="text-muted">Subtotal</span>
             <span className="font-bold">{currencySymbol}{cartSubtotal.toLocaleString()}</span>
           </div>
           
-          <div className="flex justify-between mb-sm text-sm">
+          <div className="flex justify-between mb-xs text-xs">
             <span className="text-muted">Delivery Charges</span>
             <span className="font-bold" style={{ color: shipping === 0 ? '#16a34a' : 'inherit' }}>
               {shipping === 0 ? 'FREE' : `${currencySymbol}${shipping.toLocaleString()}`}
@@ -139,44 +152,37 @@ const Cart = () => {
           </div>
           
           {shipping === 0 && cartSubtotal > 0 && (
-            <p className="text-xs text-success-color mb-sm" style={{ color: '#16a34a', fontWeight: 600 }}>✓ Free Shipping nationwide applied!</p>
+            <p className="text-xs mb-xs" style={{ color: '#16a34a', fontWeight: 600, fontSize: '0.75rem' }}>✓ Free Shipping nationwide applied!</p>
           )}
 
-          <div className="flex justify-between mb-lg pt-md text-xl font-bold" style={{ borderTop: '2px dashed var(--border-color)' }}>
+          <div className="flex justify-between mb-md pt-sm text-lg font-bold" style={{ borderTop: '2px dashed var(--border-color)' }}>
             <span>Total Payable</span>
             <span style={{ color: '#ea580c' }}>{currencySymbol}{total.toLocaleString()}</span>
           </div>
 
-          <div style={{ backgroundColor: 'rgba(234, 88, 12, 0.08)', padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid rgba(234, 88, 12, 0.2)' }}>
+          <div style={{ backgroundColor: 'var(--accent-light)', padding: '0.625rem 0.75rem', borderRadius: '8px', marginBottom: '1rem', border: '1px solid var(--accent-border)' }}>
             <p className="text-xs font-bold flex items-center gap-xs" style={{ color: '#ea580c', margin: 0 }}>
-              <Truck size={16} /> Cash on Delivery Available
+              <Truck size={15} /> Cash on Delivery Available
             </p>
-            <p className="text-xs text-muted mt-xs" style={{ margin: '4px 0 0 0' }}>
-              Pay when you receive your order at your doorstep.
+            <p className="text-xs text-muted mt-xs" style={{ margin: '2px 0 0 0', fontSize: '0.7rem' }}>
+              Pay cash at your doorstep when you receive the order.
             </p>
           </div>
 
           <button 
-            className="btn btn-primary btn-full text-base py-md mb-md flex items-center justify-center gap-sm font-bold" 
+            className="btn btn-primary btn-full text-sm py-md mb-xs flex items-center justify-center gap-xs font-bold" 
             onClick={handleCheckout}
             style={{ backgroundColor: '#ea580c', borderColor: '#ea580c' }}
           >
-            Cash on Delivery Checkout <ArrowRight size={18} />
+            Cash on Delivery Checkout <ArrowRight size={16} />
           </button>
           
-          <Link to="/shop" className="btn btn-outline btn-full text-center text-sm">
+          <Link to="/shop" className="btn btn-outline btn-full text-center text-xs" style={{ minHeight: '38px' }}>
             Continue Shopping
           </Link>
         </div>
 
       </div>
-      <style dangerouslySetInnerHTML={{__html: `
-        @media (min-width: 768px) {
-          .md\\:flex-row { flex-direction: row; }
-          .md\\:flex { display: flex; }
-        }
-        .hover-text:hover { color: #ea580c; }
-      `}} />
     </div>
   );
 };

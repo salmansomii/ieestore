@@ -6,12 +6,29 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem('trendkids_cart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    try {
+      const savedCart = localStorage.getItem('taicon_cart') || localStorage.getItem('trendkids_cart');
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch {
+      return [];
+    }
   });
 
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => {
+      setToast(null);
+    }, 2800);
+  };
+
   useEffect(() => {
-    localStorage.setItem('trendkids_cart', JSON.stringify(cart));
+    try {
+      localStorage.setItem('taicon_cart', JSON.stringify(cart));
+    } catch {
+      // storage unavailable or full
+    }
   }, [cart]);
 
   const addToCart = (product, quantity = 1, variation = null) => {
@@ -28,12 +45,14 @@ export const CartProvider = ({ children }) => {
         return [...prevCart, { product, quantity, variation }];
       }
     });
+    showToast(`Added "${product.name}" to your cart!`);
   };
 
   const removeFromCart = (productId, variation = null) => {
     setCart(prevCart => 
       prevCart.filter(item => !(item.product.id === productId && JSON.stringify(item.variation) === JSON.stringify(variation)))
     );
+    showToast('Item removed from cart', 'info');
   };
 
   const updateQuantity = (productId, variation, newQuantity) => {
@@ -61,9 +80,17 @@ export const CartProvider = ({ children }) => {
       updateQuantity,
       clearCart,
       cartCount,
-      cartSubtotal
+      cartSubtotal,
+      toast,
+      showToast
     }}>
       {children}
+      {toast && (
+        <div className="app-toast">
+          <span>✓</span>
+          <span>{toast.message}</span>
+        </div>
+      )}
     </CartContext.Provider>
   );
 };
