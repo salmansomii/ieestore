@@ -532,16 +532,19 @@ const Checkout = () => {
 
                 <div className="md:col-span-2">
                   <label className="text-xs font-semibold mb-xs block">
-                    Email Address (Optional - for order confirmation copy)
+                    Email Address (Order Slip receive karne ke liye)
                   </label>
                   <input 
                     type="email" 
                     name="email" 
                     className="input" 
-                    placeholder="name@example.com" 
+                    placeholder="e.g. yourname@gmail.com" 
                     value={shippingInfo.email}
                     onChange={handleChange}
                   />
+                  <span className="text-xs text-muted block mt-xs" style={{ fontSize: '0.7rem' }}>
+                    ✓ Kisi signup ya password ki zaroorat nahi — Order confirmation slip direct aapke email par aayegi.
+                  </span>
                 </div>
 
                 <div className="md:col-span-2">
