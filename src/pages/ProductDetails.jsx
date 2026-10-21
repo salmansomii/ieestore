@@ -19,6 +19,7 @@ const ProductDetails = () => {
   const [selections, setSelections] = useState({});
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isVideoActive, setIsVideoActive] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const { currencySymbol } = storeConfig.settings;
 
@@ -48,6 +49,7 @@ const ProductDetails = () => {
         if (isMounted) {
           setSelectedImageIndex(0);
           setIsVideoActive(false);
+          setVideoError(false);
           setLoading(false);
         }
       }
@@ -236,22 +238,40 @@ const ProductDetails = () => {
             onTouchEnd={handleTouchEnd}
           >
             {isVideoActive && product.video ? (
-              <video 
-                key={product.video}
-                src={product.video} 
-                controls 
-                autoPlay 
-                playsInline 
-                preload="metadata"
-                poster={product.image}
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'contain',
-                  backgroundColor: '#000000',
-                  borderRadius: '14px'
-                }}
-              />
+              videoError ? (
+                <div style={{ textAlign: 'center', color: '#ffffff', padding: '2rem' }}>
+                  <p style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>Video preview unavailable or format not supported.</p>
+                  <button 
+                    type="button" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsVideoActive(false);
+                    }}
+                    className="btn btn-primary text-xs"
+                  >
+                    View Photos
+                  </button>
+                </div>
+              ) : (
+                <video 
+                  key={product.video}
+                  controls 
+                  playsInline 
+                  preload="metadata"
+                  poster={product.image}
+                  onError={() => setVideoError(true)}
+                  style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    objectFit: 'contain',
+                    backgroundColor: '#000000',
+                    borderRadius: '14px'
+                  }}
+                >
+                  <source src={product.video} type="video/mp4" />
+                  Your browser does not support HTML5 video playback.
+                </video>
+              )
             ) : (
               <img 
                 key={currentImage}
