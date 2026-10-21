@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import BottomNav from './components/BottomNav';
@@ -52,7 +52,8 @@ function App() {
                 <Route path="/order" element={<Admin />} />
                 <Route path="/orders" element={<Admin />} />
                 <Route path="/admin" element={<Admin />} />
-                <Route path="/account" element={<Account />} />
+                <Route path="/account" element={<Navigate to="/" replace />} />
+                <Route path="/login" element={<Navigate to="/" replace />} />
                 
                 {/* Informational Pages */}
                 <Route path="/about" element={<InfoPage title="About Us" />} />

@@ -82,7 +82,6 @@ const Footer = () => {
           <div style={{ display: 'flex', gap: '1rem' }}>
             <Link to="/privacy" className="text-xs text-muted hover-text">Privacy Policy</Link>
             <Link to="/terms" className="text-xs text-muted hover-text">Terms & Conditions</Link>
-            <Link to="/order" className="text-xs text-muted hover-text">Admin Orders</Link>
           </div>
         </div>
       </div>

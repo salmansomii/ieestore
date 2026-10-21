@@ -28,7 +28,6 @@ const BottomNav = () => {
       icon: ShoppingBag, 
       badge: cartCount 
     },
-    { label: 'Orders', path: '/order', icon: PackageCheck },
   ];
 
   return (

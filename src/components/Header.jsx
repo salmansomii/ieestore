@@ -192,17 +192,7 @@ const Header = () => {
               <Search size={21} />
             </button>
 
-            {/* Admin Shield Icon */}
-            {isAdmin && (
-              <Link 
-                to="/order" 
-                style={{ color: '#ea580c', padding: '6px' }} 
-                className="hidden md:block" 
-                title="Admin Orders Dashboard"
-              >
-                <Shield size={22} />
-              </Link>
-            )}
+
             
             {/* Cart Icon */}
             <Link 
@@ -402,27 +392,7 @@ const Header = () => {
                   </li>
                 ))}
 
-                {isAdmin && (
-                  <li>
-                    <Link 
-                      to="/order" 
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '8px',
-                        padding: '0.75rem 0.75rem', 
-                        borderRadius: '8px', 
-                        color: '#ea580c', 
-                        fontWeight: 700, 
-                        fontSize: '0.95rem',
-                        backgroundColor: 'var(--accent-light)' 
-                      }}
-                    >
-                      <Shield size={18} /> Admin Orders Portal
-                    </Link>
-                  </li>
-                )}
+
               </ul>
 
               {/* Informational Links */}
