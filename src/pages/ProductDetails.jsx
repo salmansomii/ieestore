@@ -256,9 +256,11 @@ const ProductDetails = () => {
                 <video 
                   key={product.video}
                   controls 
+                  autoPlay
+                  muted
+                  loop
                   playsInline 
-                  preload="metadata"
-                  poster={product.image}
+                  preload="auto"
                   onError={() => setVideoError(true)}
                   style={{ 
                     width: '100%', 
