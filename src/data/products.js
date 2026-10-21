@@ -32,6 +32,6 @@ export const products = [
       "/product_images/main-image-2.png",
       "/product_images/main-image-3.png"
     ],
-    "video": "/product_images/main-video-product.mp4"
+    "video": "/product_images/product-video.mp4"
   }
 ];
