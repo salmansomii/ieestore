@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { products as localProducts } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { storeConfig } from '../config/store.config';
-import { Check, Shield, Truck, MessageSquare, ArrowLeft, Plus, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Check, Shield, Truck, MessageSquare, ArrowLeft, Plus, ShoppingBag, ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { db } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -18,6 +18,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [selections, setSelections] = useState({});
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [isVideoActive, setIsVideoActive] = useState(false);
   const { currencySymbol } = storeConfig.settings;
 
   const touchStartX = useRef(0);
@@ -33,18 +34,21 @@ const ProductDetails = () => {
         if (docSnap.exists() && isMounted) {
           setProduct({ id: docSnap.id, ...docSnap.data() });
         } else if (isMounted) {
-          const localMatch = localProducts.find(p => p.id === id);
+          const localMatch = localProducts.find(p => p.id === id) || 
+            (id === 'home-fridge-inverter' ? localProducts.find(p => p.category === 'Home Product') : null);
           if (localMatch) setProduct(localMatch);
         }
       } catch (error) {
         console.error("Error fetching product:", error);
         if (isMounted) {
-          const localMatch = localProducts.find(p => p.id === id);
+          const localMatch = localProducts.find(p => p.id === id) || 
+            (id === 'home-fridge-inverter' ? localProducts.find(p => p.category === 'Home Product') : null);
           if (localMatch) setProduct(localMatch);
         }
       } finally {
         if (isMounted) {
           setSelectedImageIndex(0);
+          setIsVideoActive(false);
           setLoading(false);
         }
       }
@@ -81,10 +85,12 @@ const ProductDetails = () => {
   const currentImage = productImages[selectedImageIndex] || product.image;
 
   const handleNextImage = () => {
+    setIsVideoActive(false);
     setSelectedImageIndex(prev => (prev === productImages.length - 1 ? 0 : prev + 1));
   };
 
   const handlePrevImage = () => {
+    setIsVideoActive(false);
     setSelectedImageIndex(prev => (prev === 0 ? productImages.length - 1 : prev - 1));
   };
 
@@ -150,21 +156,21 @@ const ProductDetails = () => {
 
       <div className="grid md:grid-cols-2 gap-lg" style={{ alignItems: 'flex-start' }}>
         
-        {/* Amazon-Style Product Image Gallery */}
+        {/* Amazon-Style Product Image & Video Gallery */}
         <div>
-          {/* Main Showcase Image */}
+          {/* Main Showcase Image or Video */}
           <div 
             style={{ 
               position: 'relative', 
               borderRadius: '16px', 
               overflow: 'hidden', 
-              backgroundColor: '#ffffff', 
+              backgroundColor: isVideoActive ? '#000000' : '#ffffff', 
               aspectRatio: '1/1', 
               border: '1px solid var(--border-color)', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
-              padding: '1.25rem',
+              padding: isVideoActive ? 0 : '1.25rem',
               boxShadow: 'var(--shadow-sm)',
               userSelect: 'none'
             }}
@@ -172,21 +178,38 @@ const ProductDetails = () => {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <img 
-              key={currentImage}
-              src={currentImage} 
-              alt={`${product.name} view ${selectedImageIndex + 1}`} 
-              className="w-full h-full"
-              style={{ 
-                objectFit: 'contain',
-                transition: 'opacity 0.25s ease-in-out',
-                animation: 'imgFade 0.25s ease'
-              }}
-              fetchpriority="high"
-            />
+            {isVideoActive && product.video ? (
+              <video 
+                key={product.video}
+                src={product.video} 
+                controls 
+                autoPlay 
+                playsInline 
+                poster={product.image}
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'contain',
+                  backgroundColor: '#000000'
+                }}
+              />
+            ) : (
+              <img 
+                key={currentImage}
+                src={currentImage} 
+                alt={`${product.name} view ${selectedImageIndex + 1}`} 
+                className="w-full h-full"
+                style={{ 
+                  objectFit: 'contain',
+                  transition: 'opacity 0.25s ease-in-out',
+                  animation: 'imgFade 0.25s ease'
+                }}
+                fetchpriority="high"
+              />
+            )}
 
             {/* Discount Badge */}
-            {product.discountPercentage > 0 && (
+            {product.discountPercentage > 0 && !isVideoActive && (
               <div 
                 style={{ 
                   position: 'absolute', 
@@ -204,8 +227,10 @@ const ProductDetails = () => {
               </div>
             )}
 
+
+
             {/* Image Counter Badge */}
-            {productImages.length > 1 && (
+            {!isVideoActive && productImages.length > 1 && (
               <div
                 style={{
                   position: 'absolute',
@@ -225,7 +250,7 @@ const ProductDetails = () => {
             )}
 
             {/* Previous Image Arrow (if multiple images) */}
-            {productImages.length > 1 && (
+            {!isVideoActive && productImages.length > 1 && (
               <button
                 onClick={handlePrevImage}
                 style={{
@@ -252,7 +277,7 @@ const ProductDetails = () => {
             )}
 
             {/* Next Image Arrow (if multiple images) */}
-            {productImages.length > 1 && (
+            {!isVideoActive && productImages.length > 1 && (
               <button
                 onClick={handleNextImage}
                 style={{
@@ -280,7 +305,7 @@ const ProductDetails = () => {
           </div>
 
           {/* Amazon-Style Thumbnails Row Below Main Image */}
-          {productImages.length > 1 && (
+          {(productImages.length > 1 || product.video) && (
             <div 
               style={{ 
                 display: 'flex', 
@@ -293,12 +318,18 @@ const ProductDetails = () => {
               }}
             >
               {productImages.map((img, idx) => {
-                const isSelected = selectedImageIndex === idx;
+                const isSelected = !isVideoActive && selectedImageIndex === idx;
                 return (
                   <button
                     key={idx}
-                    onClick={() => setSelectedImageIndex(idx)}
-                    onMouseEnter={() => setSelectedImageIndex(idx)}
+                    onClick={() => {
+                      setIsVideoActive(false);
+                      setSelectedImageIndex(idx);
+                    }}
+                    onMouseEnter={() => {
+                      setIsVideoActive(false);
+                      setSelectedImageIndex(idx);
+                    }}
                     style={{
                       width: '68px',
                       height: '68px',
@@ -329,6 +360,60 @@ const ProductDetails = () => {
                   </button>
                 );
               })}
+
+              {/* Video Thumbnail Button */}
+              {product.video && (
+                <button
+                  type="button"
+                  onClick={() => setIsVideoActive(true)}
+                  style={{
+                    width: '68px',
+                    height: '68px',
+                    flexShrink: 0,
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    backgroundColor: '#0f172a',
+                    border: isVideoActive ? '2px solid #ea580c' : '1px solid var(--border-color)',
+                    boxShadow: isVideoActive ? '0 0 0 2px rgba(234, 88, 12, 0.2)' : 'none',
+                    opacity: isVideoActive ? 1 : 0.85,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '3px',
+                    color: '#ffffff',
+                    transition: 'all 0.2s ease',
+                    outline: 'none',
+                    transform: isVideoActive ? 'scale(1.03)' : 'scale(1)',
+                    position: 'relative'
+                  }}
+                  aria-label="Play product video"
+                >
+                  <img 
+                    src={product.image} 
+                    alt="Video preview" 
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} 
+                  />
+                  <div 
+                    style={{
+                      position: 'relative',
+                      zIndex: 2,
+                      width: '26px',
+                      height: '26px',
+                      borderRadius: '50%',
+                      backgroundColor: '#ea580c',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 2px 5px rgba(0,0,0,0.3)'
+                    }}
+                  >
+                    <Play size={13} fill="white" style={{ marginLeft: '2px' }} />
+                  </div>
+                  <span style={{ position: 'relative', zIndex: 2, fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.04em' }}>VIDEO</span>
+                </button>
+              )}
             </div>
           )}
         </div>

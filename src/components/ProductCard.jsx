@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { storeConfig } from '../config/store.config';
-import { Plus } from 'lucide-react';
+import { Plus, Play } from 'lucide-react';
 
 const ProductCard = ({ product, priority = false }) => {
   const { addToCart } = useCart();
@@ -46,6 +46,27 @@ const ProductCard = ({ product, priority = false }) => {
             }}
           >
             -{product.discountPercentage}%
+          </div>
+        )}
+        {product.video && (
+          <div 
+            style={{ 
+              position: 'absolute', 
+              bottom: '6px', 
+              right: '6px', 
+              backgroundColor: 'rgba(15, 23, 42, 0.82)', 
+              color: 'white', 
+              padding: '2px 7px', 
+              borderRadius: '4px', 
+              fontSize: '0.65rem', 
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              backdropFilter: 'blur(4px)'
+            }}
+          >
+            <Play size={10} fill="white" /> Video
           </div>
         )}
       </div>

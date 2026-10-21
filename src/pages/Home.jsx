@@ -367,9 +367,9 @@ const Home = () => {
                   SMART LIVING
                 </span>
                 <h3 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 4px 0', color: 'white' }}>Home Products</h3>
-                <p style={{ margin: 0, opacity: 0.9, fontSize: '0.8rem' }}>Inverter Refrigerators, Smart TVs & Kitchen Appliances</p>
+                <p style={{ margin: 0, opacity: 0.9, fontSize: '0.8rem' }}>Electric Water Heating Rods, Smart Living & Home Appliances</p>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#fb923c', fontWeight: 600, marginTop: '8px', fontSize: '0.85rem' }}>
-                  Explore Appliances <ArrowRight size={16} />
+                  Explore Home Products <ArrowRight size={16} />
                 </span>
               </div>
             </Link>
