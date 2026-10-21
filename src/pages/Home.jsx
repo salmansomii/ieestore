@@ -284,8 +284,7 @@ const Home = () => {
                 boxShadow: 'var(--shadow-sm)',
                 display: 'block',
                 textDecoration: 'none',
-                minHeight: '220px',
-                backgroundColor: '#1e293b'
+                backgroundColor: '#0f172a'
               }}
               className="cat-card-hover"
             >
@@ -294,10 +293,10 @@ const Home = () => {
                 alt="Solar System"
                 style={{
                   width: '100%',
-                  height: '100%',
-                  minHeight: '220px',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
+                  height: 'auto',
+                  aspectRatio: '1951 / 806',
+                  objectFit: 'contain',
+                  display: 'block'
                 }}
                 loading="lazy"
               />
@@ -305,7 +304,7 @@ const Home = () => {
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 65%, transparent 100%)',
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%, transparent 100%)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'flex-end',
@@ -316,10 +315,10 @@ const Home = () => {
                 <span style={{ backgroundColor: '#ea580c', color: 'white', padding: '3px 10px', borderRadius: '999px', fontSize: '0.7rem', fontWeight: 700, width: 'fit-content', marginBottom: '6px' }}>
                   CLEAN ENERGY
                 </span>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 4px 0', color: 'white' }}>Solar Systems</h3>
-                <p style={{ margin: 0, opacity: 0.9, fontSize: '0.8rem' }}>Solar Panels, Hybrid Inverters & Lithium Batteries</p>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#fb923c', fontWeight: 600, marginTop: '8px', fontSize: '0.85rem' }}>
-                  Explore Solar <ArrowRight size={16} />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: '0 0 4px 0', color: 'white' }}>Solar Systems</h3>
+                <p style={{ margin: 0, opacity: 0.9, fontSize: '0.75rem' }}>Solar Panels, Hybrid Inverters & Lithium Batteries</p>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#fb923c', fontWeight: 600, marginTop: '6px', fontSize: '0.8rem' }}>
+                  Explore Solar <ArrowRight size={15} />
                 </span>
               </div>
             </Link>
@@ -334,8 +333,7 @@ const Home = () => {
                 boxShadow: 'var(--shadow-sm)',
                 display: 'block',
                 textDecoration: 'none',
-                minHeight: '220px',
-                backgroundColor: '#1e293b'
+                backgroundColor: '#0f172a'
               }}
               className="cat-card-hover"
             >
@@ -344,10 +342,10 @@ const Home = () => {
                 alt="Home Product"
                 style={{
                   width: '100%',
-                  height: '100%',
-                  minHeight: '220px',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
+                  height: 'auto',
+                  aspectRatio: '1951 / 806',
+                  objectFit: 'contain',
+                  display: 'block'
                 }}
                 loading="lazy"
               />
@@ -355,7 +353,7 @@ const Home = () => {
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 65%, transparent 100%)',
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%, transparent 100%)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'flex-end',
@@ -366,10 +364,10 @@ const Home = () => {
                 <span style={{ backgroundColor: '#ea580c', color: 'white', padding: '3px 10px', borderRadius: '999px', fontSize: '0.7rem', fontWeight: 700, width: 'fit-content', marginBottom: '6px' }}>
                   SMART LIVING
                 </span>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 4px 0', color: 'white' }}>Home Products</h3>
-                <p style={{ margin: 0, opacity: 0.9, fontSize: '0.8rem' }}>Electric Water Heating Rods, Smart Living & Home Appliances</p>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#fb923c', fontWeight: 600, marginTop: '8px', fontSize: '0.85rem' }}>
-                  Explore Home Products <ArrowRight size={16} />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: '0 0 4px 0', color: 'white' }}>Home Products</h3>
+                <p style={{ margin: 0, opacity: 0.9, fontSize: '0.75rem' }}>Electric Water Heating Rods & Appliances</p>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#fb923c', fontWeight: 600, marginTop: '6px', fontSize: '0.8rem' }}>
+                  Explore Home Products <ArrowRight size={15} />
                 </span>
               </div>
             </Link>
@@ -377,45 +375,69 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Solar Systems - 2 Column on Mobile! */}
+      {/* Featured Products Section - Showing Available Products */}
       <section className="section bg-secondary">
         <div className="container">
           <div className="flex justify-between items-center mb-md flex-wrap gap-xs">
             <div>
-              <h2 className="text-xl font-bold">Solar System Products</h2>
-              <p className="text-xs text-muted">Tier-1 solar panels, hybrid inverters & storage</p>
+              <h2 className="text-xl font-bold">Featured Products</h2>
+              <p className="text-xs text-muted">Genuine brand verified products with Cash on Delivery</p>
             </div>
-            <Link to="/shop/Solar System" className="text-primary-color font-semibold text-xs flex items-center gap-xs">
+            <Link to="/shop" className="text-primary-color font-semibold text-xs flex items-center gap-xs">
               View All <ArrowRight size={14} />
             </Link>
           </div>
           <div className="product-grid">
-            {solarProducts.slice(0, 6).map((product, idx) => (
+            {products.map((product, idx) => (
               <ProductCard key={product.id} product={product} priority={idx < 2} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Home Products - 2 Column on Mobile! */}
-      <section className="section">
-        <div className="container">
-          <div className="flex justify-between items-center mb-md flex-wrap gap-xs">
-            <div>
-              <h2 className="text-xl font-bold">Home Products</h2>
-              <p className="text-xs text-muted">Quality electronic & kitchen appliances</p>
+      {/* Solar System Products (if available) */}
+      {solarProducts.length > 0 && (
+        <section className="section bg-secondary">
+          <div className="container">
+            <div className="flex justify-between items-center mb-md flex-wrap gap-xs">
+              <div>
+                <h2 className="text-xl font-bold">Solar System Products</h2>
+                <p className="text-xs text-muted">Tier-1 solar panels, hybrid inverters & storage</p>
+              </div>
+              <Link to="/shop/Solar System" className="text-primary-color font-semibold text-xs flex items-center gap-xs">
+                View All <ArrowRight size={14} />
+              </Link>
             </div>
-            <Link to="/shop/Home Product" className="text-primary-color font-semibold text-xs flex items-center gap-xs">
-              View All <ArrowRight size={14} />
-            </Link>
+            <div className="product-grid">
+              {solarProducts.map((product, idx) => (
+                <ProductCard key={product.id} product={product} priority={idx < 2} />
+              ))}
+            </div>
           </div>
-          <div className="product-grid">
-            {homeProducts.slice(0, 6).map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+        </section>
+      )}
+
+      {/* Home Products (if multiple) */}
+      {homeProducts.length > 1 && (
+        <section className="section">
+          <div className="container">
+            <div className="flex justify-between items-center mb-md flex-wrap gap-xs">
+              <div>
+                <h2 className="text-xl font-bold">Home Products</h2>
+                <p className="text-xs text-muted">Quality electronic & heating appliances</p>
+              </div>
+              <Link to="/shop/Home Product" className="text-primary-color font-semibold text-xs flex items-center gap-xs">
+                View All <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="product-grid">
+              {homeProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Cash on Delivery Banner */}
       <section style={{ backgroundColor: '#ea580c', color: 'white', padding: '2.75rem 0', textAlign: 'center' }}>

@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { products as localProducts } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { storeConfig } from '../config/store.config';
-import { Check, Shield, Truck, MessageSquare, ArrowLeft, Plus, ShoppingBag, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { Check, Shield, Truck, MessageSquare, ArrowLeft, Plus, ShoppingBag, ChevronLeft, ChevronRight, Play, Maximize2, X } from 'lucide-react';
 import { db } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -19,6 +19,7 @@ const ProductDetails = () => {
   const [selections, setSelections] = useState({});
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isVideoActive, setIsVideoActive] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const { currencySymbol } = storeConfig.settings;
 
   const touchStartX = useRef(0);
@@ -34,15 +35,13 @@ const ProductDetails = () => {
         if (docSnap.exists() && isMounted) {
           setProduct({ id: docSnap.id, ...docSnap.data() });
         } else if (isMounted) {
-          const localMatch = localProducts.find(p => p.id === id) || 
-            (id === 'home-fridge-inverter' ? localProducts.find(p => p.category === 'Home Product') : null);
+          const localMatch = localProducts.find(p => p.id === id) || localProducts[0];
           if (localMatch) setProduct(localMatch);
         }
       } catch (error) {
         console.error("Error fetching product:", error);
         if (isMounted) {
-          const localMatch = localProducts.find(p => p.id === id) || 
-            (id === 'home-fridge-inverter' ? localProducts.find(p => p.category === 'Home Product') : null);
+          const localMatch = localProducts.find(p => p.id === id) || localProducts[0];
           if (localMatch) setProduct(localMatch);
         }
       } finally {
@@ -56,6 +55,22 @@ const ProductDetails = () => {
     fetchProduct();
     return () => { isMounted = false; };
   }, [id]);
+
+  // Lock body scroll and handle keyboard navigation when Lightbox is open
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsLightboxOpen(false);
+      if (e.key === 'ArrowRight') handleNextImage();
+      if (e.key === 'ArrowLeft') handlePrevImage();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isLightboxOpen, selectedImageIndex]);
 
   if (loading) {
     return (
@@ -158,6 +173,44 @@ const ProductDetails = () => {
         
         {/* Amazon-Style Product Image & Video Gallery */}
         <div>
+          {/* Quick Media Mode Switcher */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+            <button
+              type="button"
+              onClick={() => setIsVideoActive(false)}
+              className={`btn text-xs ${!isVideoActive ? 'btn-primary' : 'btn-secondary'}`}
+              style={{ 
+                padding: '0.4rem 0.85rem', 
+                minHeight: '34px', 
+                borderRadius: '8px',
+                fontWeight: 600,
+                fontSize: '0.8rem'
+              }}
+            >
+              📷 Photos ({productImages.length})
+            </button>
+            {product.video && (
+              <button
+                type="button"
+                onClick={() => setIsVideoActive(true)}
+                className={`btn text-xs ${isVideoActive ? 'btn-primary' : 'btn-secondary'}`}
+                style={{ 
+                  padding: '0.4rem 0.85rem', 
+                  minHeight: '34px', 
+                  borderRadius: '8px',
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <Play size={13} fill={isVideoActive ? "white" : "#ea580c"} style={{ color: isVideoActive ? 'white' : '#ea580c' }} /> 
+                Watch Video (ویڈیو)
+              </button>
+            )}
+          </div>
+
           {/* Main Showcase Image or Video */}
           <div 
             style={{ 
@@ -165,14 +218,18 @@ const ProductDetails = () => {
               borderRadius: '16px', 
               overflow: 'hidden', 
               backgroundColor: isVideoActive ? '#000000' : '#ffffff', 
-              aspectRatio: '1/1', 
+              aspectRatio: isVideoActive ? '16/9' : '1/1', 
               border: '1px solid var(--border-color)', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
-              padding: isVideoActive ? 0 : '1.25rem',
+              padding: isVideoActive ? 0 : '0.35rem',
               boxShadow: 'var(--shadow-sm)',
-              userSelect: 'none'
+              userSelect: 'none',
+              cursor: isVideoActive ? 'default' : 'zoom-in'
+            }}
+            onClick={() => {
+              if (!isVideoActive) setIsLightboxOpen(true);
             }}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -185,12 +242,14 @@ const ProductDetails = () => {
                 controls 
                 autoPlay 
                 playsInline 
+                preload="metadata"
                 poster={product.image}
                 style={{ 
                   width: '100%', 
                   height: '100%', 
                   objectFit: 'contain',
-                  backgroundColor: '#000000'
+                  backgroundColor: '#000000',
+                  borderRadius: '14px'
                 }}
               />
             ) : (
@@ -201,6 +260,8 @@ const ProductDetails = () => {
                 className="w-full h-full"
                 style={{ 
                   objectFit: 'contain',
+                  width: '100%',
+                  height: '100%',
                   transition: 'opacity 0.25s ease-in-out',
                   animation: 'imgFade 0.25s ease'
                 }}
@@ -220,14 +281,47 @@ const ProductDetails = () => {
                   padding: '3px 10px', 
                   borderRadius: '6px', 
                   fontSize: '0.75rem', 
-                  fontWeight: 700 
+                  fontWeight: 700,
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                  zIndex: 4
                 }}
               >
                 Save {product.discountPercentage}%
               </div>
             )}
 
-
+            {/* Full Screen Zoom Button Badge */}
+            {!isVideoActive && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsLightboxOpen(true);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px',
+                  backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '5px 10px',
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  cursor: 'pointer',
+                  backdropFilter: 'blur(4px)',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                  zIndex: 5
+                }}
+                title="Click to view full image (پوری تصویر دیکھیں)"
+              >
+                <Maximize2 size={13} /> Full View
+              </button>
+            )}
 
             {/* Image Counter Badge */}
             {!isVideoActive && productImages.length > 1 && (
@@ -238,11 +332,12 @@ const ProductDetails = () => {
                   right: '12px',
                   backgroundColor: 'rgba(15, 23, 42, 0.75)',
                   color: '#ffffff',
-                  padding: '2px 8px',
+                  padding: '3px 9px',
                   borderRadius: '999px',
                   fontSize: '0.7rem',
                   fontWeight: 600,
-                  backdropFilter: 'blur(4px)'
+                  backdropFilter: 'blur(4px)',
+                  zIndex: 4
                 }}
               >
                 {selectedImageIndex + 1} / {productImages.length}
@@ -252,13 +347,17 @@ const ProductDetails = () => {
             {/* Previous Image Arrow (if multiple images) */}
             {!isVideoActive && productImages.length > 1 && (
               <button
-                onClick={handlePrevImage}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevImage();
+                }}
                 style={{
                   position: 'absolute',
                   left: '8px',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
                   color: '#0f172a',
                   borderRadius: '50%',
                   width: '36px',
@@ -268,7 +367,8 @@ const ProductDetails = () => {
                   justifyContent: 'center',
                   cursor: 'pointer',
                   border: '1px solid #e2e8f0',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                  zIndex: 4
                 }}
                 aria-label="Previous Image"
               >
@@ -279,13 +379,17 @@ const ProductDetails = () => {
             {/* Next Image Arrow (if multiple images) */}
             {!isVideoActive && productImages.length > 1 && (
               <button
-                onClick={handleNextImage}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNextImage();
+                }}
                 style={{
                   position: 'absolute',
                   right: '8px',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
                   color: '#0f172a',
                   borderRadius: '50%',
                   width: '36px',
@@ -295,7 +399,8 @@ const ProductDetails = () => {
                   justifyContent: 'center',
                   cursor: 'pointer',
                   border: '1px solid #e2e8f0',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                  zIndex: 4
                 }}
                 aria-label="Next Image"
               >
@@ -322,6 +427,7 @@ const ProductDetails = () => {
                 return (
                   <button
                     key={idx}
+                    type="button"
                     onClick={() => {
                       setIsVideoActive(false);
                       setSelectedImageIndex(idx);
@@ -331,16 +437,16 @@ const ProductDetails = () => {
                       setSelectedImageIndex(idx);
                     }}
                     style={{
-                      width: '68px',
-                      height: '68px',
+                      width: '72px',
+                      height: '72px',
                       flexShrink: 0,
                       borderRadius: '8px',
                       overflow: 'hidden',
                       backgroundColor: '#ffffff',
                       border: isSelected ? '2px solid #ea580c' : '1px solid var(--border-color)',
                       boxShadow: isSelected ? '0 0 0 2px rgba(234, 88, 12, 0.2)' : 'none',
-                      opacity: isSelected ? 1 : 0.65,
-                      padding: '4px',
+                      opacity: isSelected ? 1 : 0.7,
+                      padding: '3px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
                       outline: 'none',
@@ -367,8 +473,8 @@ const ProductDetails = () => {
                   type="button"
                   onClick={() => setIsVideoActive(true)}
                   style={{
-                    width: '68px',
-                    height: '68px',
+                    width: '72px',
+                    height: '72px',
                     flexShrink: 0,
                     borderRadius: '8px',
                     overflow: 'hidden',
@@ -393,26 +499,202 @@ const ProductDetails = () => {
                   <img 
                     src={product.image} 
                     alt="Video preview" 
-                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} 
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', opacity: 0.35 }} 
                   />
                   <div 
                     style={{
                       position: 'relative',
                       zIndex: 2,
-                      width: '26px',
-                      height: '26px',
+                      width: '28px',
+                      height: '28px',
                       borderRadius: '50%',
                       backgroundColor: '#ea580c',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: '0 2px 5px rgba(0,0,0,0.3)'
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.4)'
                     }}
                   >
-                    <Play size={13} fill="white" style={{ marginLeft: '2px' }} />
+                    <Play size={14} fill="white" style={{ marginLeft: '2px' }} />
                   </div>
-                  <span style={{ position: 'relative', zIndex: 2, fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.04em' }}>VIDEO</span>
+                  <span style={{ position: 'relative', zIndex: 2, fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.04em' }}>VIDEO</span>
                 </button>
+              )}
+            </div>
+          )}
+
+          {/* Full Screen Image Lightbox Modal */}
+          {isLightboxOpen && (
+            <div
+              style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 10000,
+                backgroundColor: 'rgba(0, 0, 0, 0.95)',
+                backdropFilter: 'blur(8px)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '1rem',
+                userSelect: 'none'
+              }}
+              onClick={() => setIsLightboxOpen(false)}
+            >
+              {/* Modal Top Header */}
+              <div 
+                style={{ 
+                  width: '100%', 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  padding: '0.5rem 1rem', 
+                  color: '#ffffff', 
+                  zIndex: 10001 
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#f1f5f9' }}>
+                  {product.name} ({selectedImageIndex + 1} / {productImages.length})
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsLightboxOpen(false)}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    border: 'none',
+                    color: 'white',
+                    borderRadius: '50%',
+                    width: '42px',
+                    height: '42px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s'
+                  }}
+                  aria-label="Close Full Screen"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              {/* Modal Center Image View */}
+              <div 
+                style={{ 
+                  position: 'relative', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  width: '100%', 
+                  flex: 1, 
+                  maxHeight: '82vh' 
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {productImages.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={handlePrevImage}
+                    style={{
+                      position: 'absolute',
+                      left: '12px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '48px',
+                      height: '48px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      zIndex: 10002,
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.4)'
+                    }}
+                    aria-label="Previous Image"
+                  >
+                    <ChevronLeft size={28} />
+                  </button>
+                )}
+
+                <img
+                  src={currentImage}
+                  alt={product.name}
+                  style={{
+                    maxHeight: '82vh',
+                    maxWidth: '92vw',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    borderRadius: '8px',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)'
+                  }}
+                />
+
+                {productImages.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={handleNextImage}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '48px',
+                      height: '48px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      zIndex: 10002,
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.4)'
+                    }}
+                    aria-label="Next Image"
+                  >
+                    <ChevronRight size={28} />
+                  </button>
+                )}
+              </div>
+
+              {/* Modal Bottom Thumbnails */}
+              {productImages.length > 1 && (
+                <div 
+                  style={{ 
+                    display: 'flex', 
+                    gap: '8px', 
+                    padding: '0.75rem', 
+                    overflowX: 'auto', 
+                    zIndex: 10001,
+                    maxWidth: '100%' 
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {productImages.map((img, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedImageIndex(idx)}
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '6px',
+                        overflow: 'hidden',
+                        border: selectedImageIndex === idx ? '2px solid #ea580c' : '1px solid rgba(255,255,255,0.3)',
+                        padding: '2px',
+                        background: '#ffffff',
+                        cursor: 'pointer',
+                        opacity: selectedImageIndex === idx ? 1 : 0.6,
+                        transition: 'all 0.2s ease',
+                        flexShrink: 0
+                      }}
+                    >
+                      <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
           )}
@@ -500,6 +782,23 @@ const ProductDetails = () => {
             <button className="btn btn-outline btn-full text-sm py-md font-semibold" onClick={handleAddToCart}>
               <Plus size={16} /> Add to Cart
             </button>
+            {product.video && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsVideoActive(true);
+                  window.scrollTo({ top: 100, behavior: 'smooth' });
+                }}
+                className="btn btn-secondary btn-full text-xs font-bold"
+                style={{
+                  borderColor: '#ea580c',
+                  color: '#ea580c',
+                  marginTop: '4px'
+                }}
+              >
+                <Play size={14} fill="#ea580c" /> Watch Video Demonstration (پراڈکٹ ویڈیو دیکھیں)
+              </button>
+            )}
           </div>
 
           {/* Trust Badges */}
